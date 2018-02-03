@@ -68,8 +68,16 @@ public class DetailActivity extends AppCompatActivity {
         //Get Description
         String description =  s.getDescription();
 
+        if (description.length() == 0){
+            description = "Unable to find";
+        }
+
         //Get Place of Origin
         String origin = s.getPlaceOfOrigin();
+
+        if (origin.length() == 0){
+            origin = "Unable to find";
+        }
 
         //Get Also Known As
         List<String> alsoKnownAs = s.getAlsoKnownAs();
@@ -81,8 +89,9 @@ public class DetailActivity extends AppCompatActivity {
             while (itr.hasNext()) {
                 alsoKnownAsString = alsoKnownAsString + itr.next() + "\n";
             }
-        } else {
-            alsoKnownAsString = "Unable to find";
+        }
+        if (alsoKnownAsString.length() == 0){
+            alsoKnownAsString = "Unable to find \n";
         }
 
         //Get Ingredients
@@ -95,8 +104,9 @@ public class DetailActivity extends AppCompatActivity {
             while (itr1.hasNext()) {
                 ingredientsString = ingredientsString + itr1.next() + "\n";
             }
-        } else {
-            ingredientsString = "Unable to find";
+        }
+        if (ingredientsString.length() == 0){
+            ingredientsString = "Unable to find ";
         }
 
         //Set Description to TextView
