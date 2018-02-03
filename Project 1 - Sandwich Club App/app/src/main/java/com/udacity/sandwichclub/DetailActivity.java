@@ -73,7 +73,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //Get Also Known As
         List<String> alsoKnownAs = s.getAlsoKnownAs();
-        String alsoKnownAsString = "";
+        String alsoKnownAsString = "Unable to find";
 
         if (alsoKnownAs != null) {
             Iterator itr = alsoKnownAs.iterator();
@@ -85,7 +85,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //Get Ingredients
         List<String> ingredients = s.getIngredients();
-        String ingredientsString = "";
+        String ingredientsString = "Unable to find";
 
         if (ingredients != null) {
             Iterator itr1 = ingredients.iterator();
