@@ -73,7 +73,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //Get Also Known As
         List<String> alsoKnownAs = s.getAlsoKnownAs();
-        String alsoKnownAsString = "Unable to find";
+        String alsoKnownAsString = "";
 
         if (alsoKnownAs != null) {
             Iterator itr = alsoKnownAs.iterator();
@@ -81,11 +81,13 @@ public class DetailActivity extends AppCompatActivity {
             while (itr.hasNext()) {
                 alsoKnownAsString = alsoKnownAsString + itr.next() + "\n";
             }
+        } else {
+            alsoKnownAsString = "Unable to find";
         }
 
         //Get Ingredients
         List<String> ingredients = s.getIngredients();
-        String ingredientsString = "Unable to find";
+        String ingredientsString = "";
 
         if (ingredients != null) {
             Iterator itr1 = ingredients.iterator();
@@ -93,6 +95,8 @@ public class DetailActivity extends AppCompatActivity {
             while (itr1.hasNext()) {
                 ingredientsString = ingredientsString + itr1.next() + "\n";
             }
+        } else {
+            alsoKnownAsString = "Unable to find";
         }
 
         //Set Description to TextView
