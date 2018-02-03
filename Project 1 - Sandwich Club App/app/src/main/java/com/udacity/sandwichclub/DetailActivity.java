@@ -96,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                 ingredientsString = ingredientsString + itr1.next() + "\n";
             }
         } else {
-            alsoKnownAsString = "Unable to find";
+            ingredientsString = "Unable to find";
         }
 
         //Set Description to TextView
