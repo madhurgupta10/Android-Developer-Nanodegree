@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -71,21 +72,28 @@ public class DetailActivity extends AppCompatActivity {
         String origin = s.getPlaceOfOrigin();
 
         //Get Also Known As
-//        List<String> alsoKnownAs = s.getAlsoKnownAs();
-//        String[] arr = alsoKnownAs.toArray(new String[alsoKnownAs.size()]);
+        List<String> alsoKnownAs = s.getAlsoKnownAs();
         String alsoKnownAsString = "";
-//        for(int i = 0; i < arr.length; i++) {
-//            alsoKnownAsString = alsoKnownAsString + arr[i] + "\n";
-//        }
+
+        if (alsoKnownAs != null) {
+            Iterator itr = alsoKnownAs.iterator();
+
+            while (itr.hasNext()) {
+                alsoKnownAsString = alsoKnownAsString + itr.next() + "\n";
+            }
+        }
 
         //Get Ingredients
-//        List<String> ingredients = s.getIngredients();
-//        String[] arr1 = ingredients.toArray(new String[ingredients.size()]);
+        List<String> ingredients = s.getIngredients();
         String ingredientsString = "";
-//        for(int i = 0; i < arr.length; i++) {
-//            ingredientsString = ingredientsString + arr1[i] + "\n";
-//        }
 
+        if (ingredients != null) {
+            Iterator itr1 = ingredients.iterator();
+
+            while (itr1.hasNext()) {
+                ingredientsString = ingredientsString + itr1.next() + "\n";
+            }
+        }
 
         //Set Description to TextView
         TextView textView = findViewById(R.id.description_tv);
@@ -97,10 +105,10 @@ public class DetailActivity extends AppCompatActivity {
 
         //Set Also Known As to TextView
         TextView textView2 = findViewById(R.id.also_known_tv);
-        textView2.setText(ingredientsString);
+        textView2.setText(alsoKnownAsString);
 
         //Set Also Known As to TextView
         TextView textView3 = findViewById(R.id.ingredients_tv);
-        textView3.setText(alsoKnownAsString);
+        textView3.setText(ingredientsString);
     }
 }

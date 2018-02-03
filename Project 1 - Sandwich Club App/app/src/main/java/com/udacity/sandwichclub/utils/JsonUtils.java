@@ -1,14 +1,12 @@
 package com.udacity.sandwichclub.utils;
 
-import android.util.Log;
-
 import com.udacity.sandwichclub.model.Sandwich;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
@@ -30,12 +28,10 @@ public class JsonUtils {
 
             // Set Also Known As
             JSONArray arrJson = name.getJSONArray("alsoKnownAs");
-            String[] arr = new String[arrJson.length()];
+            List<String> arr = new ArrayList<>();
             for(int i = 0; i < arrJson.length(); i++)
-                arr[i] = arrJson.getString(i);
-
-            List<String> list = Arrays.asList(arr);
-            s.setIngredients(list);
+                arr.add(arrJson.getString(i));
+            s.setAlsoKnownAs(arr);
 
             // Set Place of Origin
             s.setPlaceOfOrigin(jsonData.getString("placeOfOrigin"));
@@ -49,13 +45,10 @@ public class JsonUtils {
             // Set Ingredients
             JSONArray arrJson1 = jsonData.getJSONArray("ingredients");
 
-            Log.d("arrJson1", ""+arrJson1);
-            String[] arr1 = new String[arrJson1.length()];
+            List<String> arr1 = new ArrayList<>();
             for(int i = 0; i < arrJson1.length(); i++)
-                arr1[i] = arrJson1.getString(i);
-
-            List<String> list1 = Arrays.asList(arr1);
-            s.setIngredients(list1);
+                arr1.add(arrJson1.getString(i));
+            s.setIngredients(arr1);
 
             return s;
 
