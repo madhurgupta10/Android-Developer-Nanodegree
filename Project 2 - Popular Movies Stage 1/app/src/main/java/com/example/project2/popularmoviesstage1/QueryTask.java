@@ -1,11 +1,13 @@
 package com.example.project2.popularmoviesstage1;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.Toast;
+
+import com.example.project2.popularmoviesstage1.model.Detail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,16 +21,22 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class QueryTask extends AsyncTask<Void, Void, String> {
 
+public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapter.listItemClickListener{
+
+    private List<String> posterUrls = new ArrayList<String>();
+    JSONArray results;
+
+    @SuppressLint("StaticFieldLeak")
     private Context c;
+    @SuppressLint("StaticFieldLeak")
     private RecyclerView r;
-    private MyAdapter.listItemClickListner listner;
+    private MyAdapter.listItemClickListener listener;
 
-    QueryTask(Context context, RecyclerView recyclerView, MyAdapter.listItemClickListner l) {
+    QueryTask(Context context, RecyclerView recyclerView) {
         c = context;
         r = recyclerView;
-        listner = l;
+        listener = this;
     }
 
 
@@ -50,7 +58,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("ASYNC", "doInBackground() called with: " + "params = [" + data + "]");
+
         return data;
     }
 
@@ -60,9 +68,8 @@ public class QueryTask extends AsyncTask<Void, Void, String> {
 
             try {
                 JSONObject jsonData = new JSONObject(data);
-                JSONArray results = jsonData.optJSONArray("results");
+                results = jsonData.optJSONArray("results");
 
-                List<String> posterUrls = new ArrayList<String>();
 
                 for(int i = 0; i < results.length(); i++) {
                     JSONObject result = results.optJSONObject(i);
@@ -70,21 +77,30 @@ public class QueryTask extends AsyncTask<Void, Void, String> {
                     posterUrls.add(poster_path);
                 }
 
-                //Toast.makeText(c, ""+posterUrls, Toast.LENGTH_LONG).show();
-
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(c, 2);
                 r.setLayoutManager(gridLayoutManager);
 
                 r.setHasFixedSize(true);
 
-                MyAdapter myAdapter = new MyAdapter(10, posterUrls, listner, c);
+                MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, c);
 
                 r.setAdapter(myAdapter);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+
+        Intent intent = new Intent(c, Detail.class);
+        JSONObject jsonAtIndex = results.optJSONObject(clickedItemIndex);
+        intent.putExtra("jsonAtIndex", jsonAtIndex.toString());
+        c.startActivity(intent);
+
     }
 }

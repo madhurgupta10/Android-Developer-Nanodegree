@@ -15,19 +15,19 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    final private listItemClickListner onClickListner;
+    final private listItemClickListener onClickListener;
     private int numberItems;
     private List<String> urls;
     private Context c;
 
-    public interface listItemClickListner {
+    public interface listItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
 
-    public MyAdapter(int numberOfItems, List<String> posterUrls, listItemClickListner listner, Context context) {
+    public MyAdapter(int numberOfItems, List<String> posterUrls, listItemClickListener listener, Context context) {
         c = context;
         urls = posterUrls;
-        onClickListner = listner;
+        onClickListener = listener;
         numberItems = numberOfItems;
     }
 
@@ -66,9 +66,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public void bind(int position) {
             Log.d("urls", "bind: "+urls);
             if (urls != null) {
-                Log.d("urls - "+ position, "http://image.tmdb.org/t/p/w185/"+urls.get(position));
+                Log.d("urls - "+ position, "http://image.tmdb.org/t/p/original/"+urls.get(position));
                 Picasso.with(c)
-                        .load("http://image.tmdb.org/t/p/w185/"+urls.get(position))
+                        .load("http://image.tmdb.org/t/p/original/"+urls.get(position))
                         .into(imageView);
             } else {
                 imageView.setImageResource(R.drawable.ic_launcher_background);
@@ -78,7 +78,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            onClickListner.onListItemClick(clickedPosition);
+            onClickListener.onListItemClick(clickedPosition);
         }
     }
 }
