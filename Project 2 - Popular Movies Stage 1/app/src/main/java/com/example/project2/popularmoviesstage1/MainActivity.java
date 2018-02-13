@@ -1,17 +1,18 @@
 package com.example.project2.popularmoviesstage1;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MyAdapter.listItemClickListner{
 
-    private static final int numberOfItems = 20;
-    private MyAdapter myAdapter;
-    private RecyclerView recyclerView;
+    private static final int numberOfItems = 4;
+    private static final List<String> posterUrls = null;
     private Toast mToast;
 
     @Override
@@ -19,15 +20,17 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.listIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.rv);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        RecyclerView recyclerView = findViewById(R.id.rv);
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        //recyclerView.setLayoutManager(gridLayoutManager);
 
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
 
-        myAdapter = new MyAdapter(numberOfItems, (MyAdapter.listItemClickListner) this);
+        //MyAdapter myAdapter = new MyAdapter(numberOfItems, posterUrls, MainActivity.this, this);
 
-        recyclerView.setAdapter(myAdapter);
+       // recyclerView.setAdapter(myAdapter);
+
+        new QueryTask(this, recyclerView, MainActivity.this).execute();
 
     }
 
@@ -36,10 +39,12 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.listIte
         if (mToast != null) {
             mToast.cancel();
         }
-        
+
         String toastMessage = "Item #" + clickedItemIndex + " clicked.";
         mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
 
         mToast.show();
     }
+
 }
+
