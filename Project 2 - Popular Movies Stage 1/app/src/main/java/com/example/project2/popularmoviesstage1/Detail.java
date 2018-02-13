@@ -1,12 +1,11 @@
-package com.example.project2.popularmoviesstage1.model;
+package com.example.project2.popularmoviesstage1;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.project2.popularmoviesstage1.R;
+import com.example.project2.popularmoviesstage1.model.Movie;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -46,8 +45,6 @@ public class Detail extends AppCompatActivity {
         releaseDate.setText("Release Date: "+movie.getRelease_date());
         title.setText(movie.getTitle());
         desc.setText(movie.getOverview());
-
-        //Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
 
     }
 }

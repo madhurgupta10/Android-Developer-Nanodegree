@@ -3,7 +3,6 @@ package com.example.project2.popularmoviesstage1;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +63,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
         public void bind(int position) {
-            Log.d("urls", "bind: "+urls);
             if (urls != null) {
-                Log.d("urls - "+ position, "http://image.tmdb.org/t/p/original/"+urls.get(position));
                 Picasso.with(c)
                         .load("http://image.tmdb.org/t/p/original/"+urls.get(position))
                         .into(imageView);

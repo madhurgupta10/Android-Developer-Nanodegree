@@ -1,13 +1,10 @@
 package com.example.project2.popularmoviesstage1;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import com.example.project2.popularmoviesstage1.model.Detail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,16 +24,18 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     private List<String> posterUrls = new ArrayList<String>();
     JSONArray results;
 
-    @SuppressLint("StaticFieldLeak")
+    private String p;
+    private String key;
     private Context c;
-    @SuppressLint("StaticFieldLeak")
     private RecyclerView r;
     private MyAdapter.listItemClickListener listener;
 
-    QueryTask(Context context, RecyclerView recyclerView) {
+    QueryTask(Context context, RecyclerView recyclerView, String path) {
+        p = path;
         c = context;
         r = recyclerView;
         listener = this;
+        key = "your api key";
     }
 
 
@@ -45,7 +44,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://api.themoviedb.org/3/movie/popular?api_key={your api key}")
+                .url("http://api.themoviedb.org/3/movie/"+p+"?api_key="+key)
                 .build();
 
         String data = null;
