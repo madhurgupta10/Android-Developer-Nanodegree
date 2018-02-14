@@ -1,179 +1,190 @@
 package com.example.project2.popularmoviesstage1.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Movie {
-    private String vote_average;
 
-    private String backdrop_path;
-
-    private String adult;
-
-    private String id;
-
+    @SerializedName("vote_count")
+    @Expose
+    private Integer voteCount;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("video")
+    @Expose
+    private Boolean video;
+    @SerializedName("vote_average")
+    @Expose
+    private Float voteAverage;
+    @SerializedName("title")
+    @Expose
     private String title;
-
+    @SerializedName("popularity")
+    @Expose
+    private Float popularity;
+    @SerializedName("poster_path")
+    @Expose
+    private String posterPath;
+    @SerializedName("original_language")
+    @Expose
+    private String originalLanguage;
+    @SerializedName("original_title")
+    @Expose
+    private String originalTitle;
+    @SerializedName("genre_ids")
+    @Expose
+    private String[] genreIds = null;
+    @SerializedName("backdrop_path")
+    @Expose
+    private String backdropPath;
+    @SerializedName("adult")
+    @Expose
+    private Boolean adult;
+    @SerializedName("overview")
+    @Expose
     private String overview;
+    @SerializedName("release_date")
+    @Expose
+    private String releaseDate;
 
-    private String original_language;
-
-    private String[] genre_ids;
-
-    private String release_date;
-
-    private String original_title;
-
-    private String vote_count;
-
-    private String poster_path;
-
-    private String video;
-
-    private String popularity;
-
-    public String getVote_average ()
-    {
-        return vote_average;
+    public Movie() {
     }
 
-    public void setVote_average (String vote_average)
-    {
-        this.vote_average = vote_average;
-    }
-
-    public String getBackdrop_path ()
-    {
-        return backdrop_path;
-    }
-
-    public void setBackdrop_path (String backdrop_path)
-    {
-        this.backdrop_path = backdrop_path;
-    }
-
-    public String getAdult ()
-    {
-        return adult;
-    }
-
-    public void setAdult (String adult)
-    {
+    public Movie(Integer voteCount, Integer id, Boolean video, Float voteAverage, String title, Float popularity, String posterPath, String originalLanguage, String originalTitle, String[] genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
+        super();
+        this.voteCount = voteCount;
+        this.id = id;
+        this.video = video;
+        this.voteAverage = voteAverage;
+        this.title = title;
+        this.popularity = popularity;
+        this.posterPath = posterPath;
+        this.originalLanguage = originalLanguage;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
+        this.backdropPath = backdropPath;
         this.adult = adult;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
     }
 
-    public String getId ()
-    {
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId (String id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getTitle ()
-    {
-        return title;
-    }
-
-    public void setTitle (String title)
-    {
-        this.title = title;
-    }
-
-    public String getOverview ()
-    {
-        return overview;
-    }
-
-    public void setOverview (String overview)
-    {
-        this.overview = overview;
-    }
-
-    public String getOriginal_language ()
-    {
-        return original_language;
-    }
-
-    public void setOriginal_language (String original_language)
-    {
-        this.original_language = original_language;
-    }
-
-    public String[] getGenre_ids ()
-    {
-        return genre_ids;
-    }
-
-    public void setGenre_ids (String[] genre_ids)
-    {
-        this.genre_ids = genre_ids;
-    }
-
-    public String getRelease_date ()
-    {
-        return release_date;
-    }
-
-    public void setRelease_date (String release_date)
-    {
-        this.release_date = release_date;
-    }
-
-    public String getOriginal_title ()
-    {
-        return original_title;
-    }
-
-    public void setOriginal_title (String original_title)
-    {
-        this.original_title = original_title;
-    }
-
-    public String getVote_count ()
-    {
-        return vote_count;
-    }
-
-    public void setVote_count (String vote_count)
-    {
-        this.vote_count = vote_count;
-    }
-
-    public String getPoster_path ()
-    {
-        return poster_path;
-    }
-
-    public void setPoster_path (String poster_path)
-    {
-        this.poster_path = poster_path;
-    }
-
-    public String getVideo ()
-    {
+    public Boolean getVideo() {
         return video;
     }
 
-    public void setVideo (String video)
-    {
+    public void setVideo(Boolean video) {
         this.video = video;
     }
 
-    public String getPopularity ()
-    {
+    public Float getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Float voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Float getPopularity() {
         return popularity;
     }
 
-    public void setPopularity (String popularity)
-    {
+    public void setPopularity(Float popularity) {
         this.popularity = popularity;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public String[] getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(String[] genreIds) {
+        this.genreIds = genreIds;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public Boolean getAdult() {
+        return adult;
+    }
+
+    public void setAdult(Boolean adult) {
+        this.adult = adult;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     @Override
     public String toString()
     {
-        return "ClassPojo [vote_average = "+vote_average+", backdrop_path = "+backdrop_path+", adult = "+adult+", id = "+id+", title = "+title+", overview = "+overview+", original_language = "+original_language+", genre_ids = "+genre_ids+", release_date = "+release_date+", original_title = "+original_title+", vote_count = "+vote_count+", poster_path = "+poster_path+", video = "+video+", popularity = "+popularity+"]";
+        return "ClassPojo [vote_average = "+voteAverage+", backdrop_path = "+backdropPath+", adult = "+adult+", id = "+id+", title = "+title+", overview = "+overview+", original_language = "+originalLanguage+", genre_ids = "+genreIds+", release_date = "+releaseDate+", original_title = "+originalTitle+", vote_count = "+voteCount+", poster_path = "+posterPath+", video = "+video+", popularity = "+popularity+"]";
     }
-}
 
+}

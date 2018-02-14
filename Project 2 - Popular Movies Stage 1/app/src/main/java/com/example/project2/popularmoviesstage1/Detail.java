@@ -33,16 +33,16 @@ public class Detail extends AppCompatActivity {
 
 
         Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/original/"+movie.getBackdrop_path())
+                .load("http://image.tmdb.org/t/p/original/"+movie.getBackdropPath())
                 .into(imageView);
 
         Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/original/"+movie.getPoster_path())
+                .load("http://image.tmdb.org/t/p/original/"+movie.getPosterPath())
                 .into(poster);
 
         setTitle(movie.getTitle());
-        rating.setText("Rating - "+movie.getVote_average());
-        releaseDate.setText("Release Date: "+movie.getRelease_date());
+        rating.setText("Rating - "+movie.getVoteAverage());
+        releaseDate.setText("Release Date: "+movie.getReleaseDate());
         title.setText(movie.getTitle());
         desc.setText(movie.getOverview());
 
