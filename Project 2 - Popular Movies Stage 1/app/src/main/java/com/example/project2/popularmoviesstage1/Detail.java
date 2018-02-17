@@ -37,7 +37,7 @@ public class Detail extends AppCompatActivity {
                 .into(imageView);
 
         Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/original/"+movie.getPosterPath())
+                .load("http://image.tmdb.org/t/p/w185/"+movie.getPosterPath())
                 .into(poster);
 
         setTitle(movie.getTitle());

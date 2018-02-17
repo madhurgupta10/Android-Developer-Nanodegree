@@ -65,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public void bind(int position) {
             if (urls != null) {
                 Picasso.with(c)
-                        .load("http://image.tmdb.org/t/p/original/"+urls.get(position))
+                        .load("http://image.tmdb.org/t/p/w185/"+urls.get(position))
                         .into(imageView);
             } else {
                 imageView.setImageResource(R.drawable.ic_launcher_background);
