@@ -3,6 +3,7 @@ package com.example.project3.popularmoviesstage2;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity{
 
-    ProgressBar spinner;
-    RecyclerView recyclerView;
+    public ProgressBar progressBar;
+    private RecyclerView recyclerView;
 
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -29,20 +30,20 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        spinner = findViewById(R.id.progressBar1);
-
+        progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.rv);
 
         setTitle("Popular Movies - Popular");
 
         if (isNetworkConnected(this)) {
-            spinner.setVisibility(View.VISIBLE);
-            new QueryTask(this, recyclerView, "popular").execute();
+            progressBar.setVisibility(View.VISIBLE);
+            new QueryTask(this, recyclerView, "popular", progressBar).execute();
         } else {
-            spinner.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity{
         if (itemThatWasClickedId == R.id.popular) {
 
             if (isNetworkConnected(this)) {
-                new QueryTask(this, recyclerView, "popular").execute();
+                new QueryTask(this, recyclerView, "popular", progressBar).execute();
 
                 setTitle("Popular Movies - Popular");
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity{
                 return true;
 
             } else {
-                spinner.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity{
         } else if (itemThatWasClickedId == R.id.top_rated) {
 
             if (isNetworkConnected(this)) {
-                new QueryTask(this, recyclerView, "top_rated").execute();
+                new QueryTask(this, recyclerView, "top_rated", progressBar).execute();
 
                 setTitle("Popular Movies - Top Rated");
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 return true;
             } else {
-                spinner.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 return false;
             }

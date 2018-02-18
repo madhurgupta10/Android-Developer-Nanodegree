@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,18 +25,20 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     private List<String> posterUrls = new ArrayList<String>();
     JSONArray results;
 
-    private String p;
+    private ProgressBar spinner;
+    private String path;
     private String key;
-    private Context c;
-    private RecyclerView r;
+    private Context context;
+    private RecyclerView recyclerView;
     private MyAdapter.listItemClickListener listener;
 
-    QueryTask(Context context, RecyclerView recyclerView, String path) {
-        p = path;
-        c = context;
-        r = recyclerView;
-        listener = this;
-        key = "your api key";
+    QueryTask(Context context, RecyclerView recyclerView, String path, ProgressBar progressBar) {
+        this.spinner = progressBar;
+        this.path = path;
+        this.context = context;
+        this.recyclerView = recyclerView;
+        this.listener = this;
+        this.key = "your api key";
     }
 
 
@@ -44,7 +47,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://api.themoviedb.org/3/movie/"+p+"?api_key="+key)
+                .url("http://api.themoviedb.org/3/movie/"+path+"?api_key="+key)
                 .build();
 
         String data = null;
@@ -76,14 +79,30 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
                     posterUrls.add(poster_path);
                 }
 
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(c, 2);
-                r.setLayoutManager(gridLayoutManager);
+                final int orientation = context.getResources().getConfiguration().orientation;
 
-                r.setHasFixedSize(true);
+                if (orientation == 1) {
+                    // If Portrait set to 2 columns
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+                    recyclerView.setLayoutManager(gridLayoutManager);
 
-                MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, c);
+                    recyclerView.setHasFixedSize(true);
 
-                r.setAdapter(myAdapter);
+                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, spinner);
+
+                    recyclerView.setAdapter(myAdapter);
+
+                } else {
+                    // Else set to 3 columns
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+
+                    recyclerView.setHasFixedSize(true);
+
+                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, spinner);
+
+                    recyclerView.setAdapter(myAdapter);
+                }
 
 
             } catch (JSONException e) {
@@ -96,10 +115,11 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     @Override
     public void onListItemClick(int clickedItemIndex) {
 
-        Intent intent = new Intent(c, Detail.class);
+        Intent intent = new Intent(context, Detail.class);
         JSONObject jsonAtIndex = results.optJSONObject(clickedItemIndex);
         intent.putExtra("jsonAtIndex", jsonAtIndex.toString());
-        c.startActivity(intent);
+        intent.putExtra("apiKey", key);
+        context.startActivity(intent);
 
     }
 }

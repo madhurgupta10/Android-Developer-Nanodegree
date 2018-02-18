@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 
@@ -17,17 +18,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     final private listItemClickListener onClickListener;
     private int numberItems;
     private List<String> urls;
-    private Context c;
+    private Context context;
+    private ProgressBar progressBar;
 
     public interface listItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
 
-    public MyAdapter(int numberOfItems, List<String> posterUrls, listItemClickListener listener, Context context) {
-        c = context;
-        urls = posterUrls;
-        onClickListener = listener;
-        numberItems = numberOfItems;
+    public MyAdapter(int numberOfItems, List<String> posterUrls, listItemClickListener listener, Context context, ProgressBar progressBar) {
+        this.context = context;
+        this.urls = posterUrls;
+        this.onClickListener = listener;
+        this.numberItems = numberOfItems;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -64,9 +67,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void bind(int position) {
             if (urls != null) {
-                Picasso.with(c)
+                Picasso.with(context)
                         .load("http://image.tmdb.org/t/p/w185/"+urls.get(position))
                         .into(imageView);
+                progressBar.setVisibility(View.INVISIBLE);
             } else {
                 imageView.setImageResource(R.drawable.ic_launcher_background);
             }
