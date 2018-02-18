@@ -56,7 +56,7 @@ public class Detail extends AppCompatActivity {
 
         Gson gson = new Gson();
 
-        if (json.length() == 0 || key.length() == 0) {
+        if (json.length() == 0 && key.length() == 0) {
 
             json = getIntent().getExtras().getString("jsonAtIndex");
             key = getIntent().getExtras().getString("apiKey");
