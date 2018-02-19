@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.project3.popularmoviesstage2"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:design:26.1.0'
     compile 'com.koushikdutta.ion:ion:2.1.6'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'

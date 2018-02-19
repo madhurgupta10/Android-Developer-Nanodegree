@@ -2,15 +2,20 @@ package com.example.project3.popularmoviesstage2;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.project3.popularmoviesstage2.model.Movie;
 import com.google.gson.Gson;
@@ -43,7 +48,11 @@ public class Detail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_detail);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         progressBarBackdrop = findViewById(R.id.progress_bar_backdrop);
         progressBarBackdrop.setVisibility(View.VISIBLE);
@@ -53,6 +62,7 @@ public class Detail extends AppCompatActivity {
 
         json = "";
         key = "";
+
 
         Gson gson = new Gson();
 
@@ -90,9 +100,9 @@ public class Detail extends AppCompatActivity {
 
             progressBarBackdrop.setVisibility(View.INVISIBLE);
 
-            setTitle(movie.getTitle());
-            rating.setText("Rating - "+movie.getVoteAverage());
-            releaseDate.setText("Release Date: "+movie.getReleaseDate());
+            setTitle("");
+            rating.setText(String.format("Rating - %s", movie.getVoteAverage()));
+            releaseDate.setText(String.format("Release Date: %s", movie.getReleaseDate()));
             title.setText(movie.getTitle());
             desc.setText(movie.getOverview());
 
@@ -105,92 +115,12 @@ public class Detail extends AppCompatActivity {
                             @Override
                             public void onCompleted(Exception e, String dataTrailers) {
                                 progressBarTrailers.setVisibility(View.INVISIBLE);
-
                                 Detail.this.dataTrailers = dataTrailers;
-
-                                try {
-                                    jsonDataTrailers = new JSONObject(dataTrailers);
-                                    JSONArray results = jsonDataTrailers.optJSONArray("results");
-
-                                    if (results.length() > 0) {
-                                        for (int i = 0; i < results.length(); i++) {
-                                            JSONObject result = results.optJSONObject(i);
-                                            final String youtubeKey = result.optString("key");
-                                            ImageView imageView = new ImageView(Detail.this);
-
-                                            Picasso.with(Detail.this)
-                                                    .load("https://img.youtube.com/vi/" + youtubeKey + "/0.jpg")
-                                                    .into(imageView);
-                                            movieTrailers.addView(imageView);
-                                            imageView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Intent youtubePlay = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + youtubeKey));
-                                                    Intent select = Intent.createChooser(youtubePlay, "Open With");
-
-                                                    if (youtubePlay.resolveActivity(getPackageManager()) != null) {
-                                                        startActivity(select);
-                                                    }
-                                                }
-                                            });
-                                            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
-                                            marginParams.setMargins(5, 0, 5, 10);
-                                        }
-                                    } else {
-                                        TextView textView = new TextView(Detail.this);
-                                        textView.setText("Sorry No Trailers Found");
-                                        textView.setTextSize(30);
-                                        movieTrailers.addView(textView);
-                                        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
-                                        marginParams.setMargins(40, 20, 20, 20);
-                                    }
-
-                                } catch (JSONException e1) {
-                                    e1.printStackTrace();
-                                }
+                                populateTrailers();
                             }
                         });
             } else {
-                try {
-                    jsonDataTrailers = new JSONObject(dataTrailers);
-                    JSONArray results = jsonDataTrailers.optJSONArray("results");
-
-                    if (results.length() > 0) {
-                        for (int i = 0; i < results.length(); i++) {
-                            JSONObject result = results.optJSONObject(i);
-                            final String youtubeKey = result.optString("key");
-                            ImageView imageView = new ImageView(Detail.this);
-
-                            Picasso.with(Detail.this)
-                                    .load("https://img.youtube.com/vi/" + youtubeKey + "/0.jpg")
-                                    .into(imageView);
-                            movieTrailers.addView(imageView);
-                            imageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent youtubePlay = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + youtubeKey));
-                                    Intent select = Intent.createChooser(youtubePlay, "Open With");
-
-                                    if (youtubePlay.resolveActivity(getPackageManager()) != null) {
-                                        startActivity(select);
-                                    }
-                                }
-                            });
-                            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
-                            marginParams.setMargins(5, 0, 5, 10);
-                        }
-                    } else {
-                        TextView textView = new TextView(Detail.this);
-                        textView.setText("Sorry No Trailers Found");
-                        textView.setTextSize(30);
-                        movieTrailers.addView(textView);
-                        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
-                        marginParams.setMargins(40, 20, 20, 20);
-                    }
-
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
+                populateTrailers();
             }
 
             if (dataReviews.length() == 0) {
@@ -201,111 +131,36 @@ public class Detail extends AppCompatActivity {
                         .setCallback(new FutureCallback<String>() {
                             @Override
                             public void onCompleted(Exception e, String dataReviews) {
-//                        Toast.makeText(Detail.this, data, Toast.LENGTH_LONG).show();
                                 Detail.this.dataReviews = dataReviews;
                                 progressBarReviews.setVisibility(View.INVISIBLE);
-
-                                try {
-                                    jsonDataReviews = new JSONObject(dataReviews);
-                                    JSONArray results = jsonDataReviews.optJSONArray("results");
-                                    if (results.length() > 0) {
-                                        for (int i = 0; i < results.length(); i++) {
-                                            JSONObject result = results.optJSONObject(i);
-                                            final String author = result.optString("author");
-                                            final String review = result.optString("content");
-
-                                            LinearLayout linearLayout = new LinearLayout(Detail.this);
-                                            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                                            TextView textViewAuthor = new TextView(Detail.this);
-                                            textViewAuthor.setText(author);
-                                            textViewAuthor.setTextColor(Color.parseColor("#495b3e"));
-
-                                            linearLayout.addView(textViewAuthor);
-
-                                            ViewGroup.LayoutParams params = textViewAuthor.getLayoutParams();
-                                            params.width = 200;
-                                            textViewAuthor.setLayoutParams(params);
-
-                                            ViewGroup.MarginLayoutParams marginParamsAuthor = (ViewGroup.MarginLayoutParams) textViewAuthor.getLayoutParams();
-                                            marginParamsAuthor.setMargins(40, 20, 20, 20);
-
-                                            TextView textViewReview = new TextView(Detail.this);
-                                            textViewReview.setText(review);
-
-                                            linearLayout.addView(textViewReview);
-                                            ViewGroup.MarginLayoutParams marginParamsReview = (ViewGroup.MarginLayoutParams) textViewReview.getLayoutParams();
-                                            marginParamsReview.setMargins(40, 20, 20, 20);
-
-                                            movieReviews.addView(linearLayout);
-
-                                        }
-                                    } else {
-                                        TextView textView = new TextView(Detail.this);
-                                        textView.setText("Sorry No Reviews Found");
-                                        textView.setTextSize(30);
-                                        movieReviews.addView(textView);
-                                        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
-                                        marginParams.setMargins(40, 20, 20, 20);
-                                    }
-                                } catch (JSONException e1) {
-                                    e1.printStackTrace();
-                                }
+                                populateReviews();
                             }
                         });
             } else {
-                try {
-                    jsonDataReviews = new JSONObject(dataReviews);
-                    JSONArray results = jsonDataReviews.optJSONArray("results");
-                    if (results.length() > 0) {
-                        for (int i = 0; i < results.length(); i++) {
-                            JSONObject result = results.optJSONObject(i);
-                            final String author = result.optString("author");
-                            final String review = result.optString("content");
-
-                            LinearLayout linearLayout = new LinearLayout(Detail.this);
-                            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                            TextView textViewAuthor = new TextView(Detail.this);
-                            textViewAuthor.setText(author);
-                            textViewAuthor.setTextColor(Color.parseColor("#495b3e"));
-
-                            linearLayout.addView(textViewAuthor);
-
-                            ViewGroup.LayoutParams params = textViewAuthor.getLayoutParams();
-                            params.width = 200;
-                            textViewAuthor.setLayoutParams(params);
-
-                            ViewGroup.MarginLayoutParams marginParamsAuthor = (ViewGroup.MarginLayoutParams) textViewAuthor.getLayoutParams();
-                            marginParamsAuthor.setMargins(40, 20, 20, 20);
-
-                            TextView textViewReview = new TextView(Detail.this);
-                            textViewReview.setText(review);
-
-                            linearLayout.addView(textViewReview);
-                            ViewGroup.MarginLayoutParams marginParamsReview = (ViewGroup.MarginLayoutParams) textViewReview.getLayoutParams();
-                            marginParamsReview.setMargins(40, 20, 20, 20);
-
-                            movieReviews.addView(linearLayout);
-
-                        }
-                    } else {
-                        TextView textView = new TextView(Detail.this);
-                        textView.setText("Sorry No Reviews Found");
-                        textView.setTextSize(30);
-                        movieReviews.addView(textView);
-                        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
-                        marginParams.setMargins(40, 20, 20, 20);
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
+                populateReviews();
             }
 
         }
 
-
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.detail_activity_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int itemThatWasClickedId = item.getItemId();
+//        if (itemThatWasClickedId == R.id.action_favorite) {
+//            //starButton.setImageIcon(R.drawable.btn_star_big_on);
+//            Toast.makeText(Detail.this, "Marked as Favourite", Toast.LENGTH_SHORT).show();
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -327,4 +182,98 @@ public class Detail extends AppCompatActivity {
         json = savedInstanceState.getString("json");
     }
 
+    private void populateTrailers() {
+        try {
+            jsonDataTrailers = new JSONObject(dataTrailers);
+            JSONArray results = jsonDataTrailers.optJSONArray("results");
+
+            if (results.length() > 0) {
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject result = results.optJSONObject(i);
+                    final String youtubeKey = result.optString("key");
+                    ImageView imageView = new ImageView(Detail.this);
+
+                    Picasso.with(Detail.this)
+                            .load("https://img.youtube.com/vi/" + youtubeKey + "/0.jpg")
+                            .into(imageView);
+                    movieTrailers.addView(imageView);
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent youtubePlay = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + youtubeKey));
+                            Intent select = Intent.createChooser(youtubePlay, "Open With");
+
+                            if (youtubePlay.resolveActivity(getPackageManager()) != null) {
+                                startActivity(select);
+                            }
+                        }
+                    });
+                    ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
+                    marginParams.setMargins(5, 0, 5, 10);
+                }
+            } else {
+                TextView textView = new TextView(Detail.this);
+                textView.setText("Sorry No Trailers Found");
+                textView.setTextColor(Color.parseColor("#abb4c6"));
+                textView.setTextSize(30);
+                movieTrailers.addView(textView);
+                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
+                marginParams.setMargins(40, 20, 20, 20);
+            }
+
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    private void populateReviews() {
+        try {
+            jsonDataReviews = new JSONObject(dataReviews);
+            JSONArray results = jsonDataReviews.optJSONArray("results");
+            if (results.length() > 0) {
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject result = results.optJSONObject(i);
+                    final String author = result.optString("author");
+                    final String review = result.optString("content");
+
+                    LinearLayout linearLayout = new LinearLayout(Detail.this);
+                    linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                    TextView textViewAuthor = new TextView(Detail.this);
+                    textViewAuthor.setText(author);
+                    textViewAuthor.setTextColor(Color.parseColor("#FFFFFF"));
+
+                    linearLayout.addView(textViewAuthor);
+
+                    ViewGroup.LayoutParams params = textViewAuthor.getLayoutParams();
+                    params.width = 200;
+                    textViewAuthor.setLayoutParams(params);
+
+                    ViewGroup.MarginLayoutParams marginParamsAuthor = (ViewGroup.MarginLayoutParams) textViewAuthor.getLayoutParams();
+                    marginParamsAuthor.setMargins(40, 20, 20, 20);
+
+                    TextView textViewReview = new TextView(Detail.this);
+                    textViewReview.setText(review);
+                    textViewReview.setTextColor(Color.parseColor("#abb4c6"));
+
+                    linearLayout.addView(textViewReview);
+                    ViewGroup.MarginLayoutParams marginParamsReview = (ViewGroup.MarginLayoutParams) textViewReview.getLayoutParams();
+                    marginParamsReview.setMargins(40, 20, 20, 20);
+
+                    movieReviews.addView(linearLayout);
+
+                }
+            } else {
+                TextView textView = new TextView(Detail.this);
+                textView.setText("Sorry No Reviews Found");
+                textView.setTextColor(Color.parseColor("#abb4c6"));
+                textView.setTextSize(30);
+                movieReviews.addView(textView);
+                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
+                marginParams.setMargins(40, 20, 20, 20);
+            }
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
 }
