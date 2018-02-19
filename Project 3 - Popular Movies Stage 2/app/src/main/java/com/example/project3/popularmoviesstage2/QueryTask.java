@@ -25,7 +25,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     private List<String> posterUrls = new ArrayList<String>();
     JSONArray results;
 
-    private ProgressBar spinner;
+    private ProgressBar progressBar;
     private String path;
     private String key;
     private Context context;
@@ -33,7 +33,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     private MyAdapter.listItemClickListener listener;
 
     QueryTask(Context context, RecyclerView recyclerView, String path, ProgressBar progressBar) {
-        this.spinner = progressBar;
+        this.progressBar = progressBar;
         this.path = path;
         this.context = context;
         this.recyclerView = recyclerView;
@@ -88,7 +88,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
 
                     recyclerView.setHasFixedSize(true);
 
-                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, spinner);
+                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, progressBar);
 
                     recyclerView.setAdapter(myAdapter);
 
@@ -99,16 +99,14 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
 
                     recyclerView.setHasFixedSize(true);
 
-                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, spinner);
+                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, progressBar);
 
                     recyclerView.setAdapter(myAdapter);
                 }
 
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -120,6 +118,5 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
         intent.putExtra("jsonAtIndex", jsonAtIndex.toString());
         intent.putExtra("apiKey", key);
         context.startActivity(intent);
-
     }
 }

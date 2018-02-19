@@ -1,13 +1,13 @@
 package com.example.project3.popularmoviesstage2;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -45,6 +45,8 @@ public class Detail extends AppCompatActivity {
     String json;
     String key;
 
+    boolean isFavourite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +54,10 @@ public class Detail extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        if (actionBar != null) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
         progressBarBackdrop = findViewById(R.id.progress_bar_backdrop);
         progressBarBackdrop.setVisibility(View.VISIBLE);
@@ -62,16 +67,16 @@ public class Detail extends AppCompatActivity {
 
         json = "";
         key = "";
-
+        isFavourite = false;
 
         Gson gson = new Gson();
 
-        if (json.length() == 0 && key.length() == 0) {
+        if (json.length() == 0 || key.length() == 0) {
 
             json = getIntent().getExtras().getString("jsonAtIndex");
             key = getIntent().getExtras().getString("apiKey");
 
-            Movie movie = gson.fromJson(json, Movie.class);
+            final Movie movie = gson.fromJson(json, Movie.class);
 
             movieTrailers = findViewById(R.id.movie_trailers);
             movieReviews = findViewById(R.id.movie_reviews);
@@ -106,6 +111,25 @@ public class Detail extends AppCompatActivity {
             title.setText(movie.getTitle());
             desc.setText(movie.getOverview());
 
+            final FloatingActionButton floatingActionButton = findViewById(R.id.fab);
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("ResourceType")
+                public void onClick(View v) {
+                    if (!isFavourite) {
+                        Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+                        floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
+                        //addToFavourites();
+                        isFavourite = true;
+                    } else if (isFavourite){
+                        Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
+                        floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
+                        isFavourite = false;
+                        //removeFromFavourites();
+                    }
+
+                }
+            });
+
             if (dataTrailers.length() == 0) {
 
                 Ion.with(this)
@@ -139,28 +163,8 @@ public class Detail extends AppCompatActivity {
             } else {
                 populateReviews();
             }
-
         }
-
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.detail_activity_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int itemThatWasClickedId = item.getItemId();
-//        if (itemThatWasClickedId == R.id.action_favorite) {
-//            //starButton.setImageIcon(R.drawable.btn_star_big_on);
-//            Toast.makeText(Detail.this, "Marked as Favourite", Toast.LENGTH_SHORT).show();
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

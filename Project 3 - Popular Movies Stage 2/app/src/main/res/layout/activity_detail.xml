@@ -171,7 +171,6 @@
 
     </ScrollView>
 
-    <!--HELP FROM - https://stackoverflow.com/questions/30769080/bottom-align-floating-action-button-->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
