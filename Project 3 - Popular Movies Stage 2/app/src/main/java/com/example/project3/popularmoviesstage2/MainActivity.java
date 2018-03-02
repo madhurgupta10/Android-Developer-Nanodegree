@@ -1,6 +1,7 @@
 package com.example.project3.popularmoviesstage2;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -12,11 +13,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.project3.popularmoviesstage2.data.TaskDbHelper;
+
 
 public class MainActivity extends AppCompatActivity{
 
     public ProgressBar progressBar;
     private RecyclerView recyclerView;
+
+    private SQLiteDatabase sqLiteDatabase;
 
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -28,6 +33,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TaskDbHelper taskDbHelper = new TaskDbHelper(this);
+
+        Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
 
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.rv);

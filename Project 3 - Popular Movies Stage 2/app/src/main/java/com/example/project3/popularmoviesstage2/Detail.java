@@ -1,13 +1,14 @@
 package com.example.project3.popularmoviesstage2;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.project3.popularmoviesstage2.data.TaskContentProvider;
+import com.example.project3.popularmoviesstage2.data.TaskContract;
 import com.example.project3.popularmoviesstage2.model.Movie;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
@@ -116,9 +119,10 @@ public class Detail extends AppCompatActivity {
                 @SuppressLint("ResourceType")
                 public void onClick(View v) {
                     if (!isFavourite) {
-                        Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
                         floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
-                        //addToFavourites();
+
+                        addToFavourites(movie.getId(), json);
                         isFavourite = true;
                     } else if (isFavourite){
                         Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
@@ -166,8 +170,23 @@ public class Detail extends AppCompatActivity {
         }
     }
 
+    private void addToFavourites(Integer movieId, String movieJson) {
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(TaskContract.TaskEntry.COLUMN_MID, movieId);
+
+        contentValues.put(TaskContract.TaskEntry.COLUMN_JSON, movieJson);
+
+        Uri uri = getContentResolver().insert(TaskContract.TaskEntry.CONTENT_URI, contentValues);
+
+        Toast.makeText(Detail.this, ""+uri, Toast.LENGTH_SHORT).show();
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("dataReviews", dataReviews);
         savedInstanceState.putString("dataTrailers", dataTrailers);

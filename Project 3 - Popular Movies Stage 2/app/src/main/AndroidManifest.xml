@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Detail" />
+        <provider
+            android:authorities="com.example.project3.popularmoviesstage2"
+            android:name="com.example.project3.popularmoviesstage2.data.TaskContentProvider" />
     </application>
-
 </manifest>
