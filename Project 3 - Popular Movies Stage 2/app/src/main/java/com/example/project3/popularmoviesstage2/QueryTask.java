@@ -66,6 +66,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
 
     @Override
     protected void onPostExecute(String data) {
+        super.onPostExecute(data);
         if (data != null) {
 
             try {

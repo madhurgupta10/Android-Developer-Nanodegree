@@ -3,9 +3,11 @@ package com.example.project3.popularmoviesstage2;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+
 public class Detail extends AppCompatActivity {
 
     LinearLayout movieTrailers;
@@ -47,7 +50,11 @@ public class Detail extends AppCompatActivity {
     String json;
     String key;
 
-    boolean isFavourite;
+    int movieId;
+
+    boolean isFavourite = false;
+
+    FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,8 @@ public class Detail extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_detail);
 
+        //Setting Action Bar to Transparent with no text so that we can add text later if we want
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
@@ -69,7 +76,6 @@ public class Detail extends AppCompatActivity {
 
         json = "";
         key = "";
-        isFavourite = false;
 
         Gson gson = new Gson();
 
@@ -80,11 +86,16 @@ public class Detail extends AppCompatActivity {
 
             final Movie movie = gson.fromJson(json, Movie.class);
 
+            movieId = movie.getId();
+
             movieTrailers = findViewById(R.id.movie_trailers);
             movieReviews = findViewById(R.id.movie_reviews);
 
             progressBarTrailers = findViewById(R.id.progress_bar_trailers);
             progressBarReviews = findViewById(R.id.progress_bar_reviews);
+
+            floatingActionButton = findViewById(R.id.fab);
+            floatingActionButton.hide();
 
             TextView title = findViewById(R.id.title_tv);
             TextView desc = findViewById(R.id.desc_tv);
@@ -113,20 +124,25 @@ public class Detail extends AppCompatActivity {
             title.setText(movie.getTitle());
             desc.setText(movie.getOverview());
 
-            final FloatingActionButton floatingActionButton = findViewById(R.id.fab);
+
+            //Check if the current movie is favourite or not
+            new isFavouriteMovie(movie.getId()).execute();
+
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("ResourceType")
                 public void onClick(View v) {
                     if (!isFavourite) {
                         Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
                         floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
-                        addToFavourites(movie.getId(), json);
+
+                        addToFavourites(movieId, json);
                         isFavourite = true;
+
                     } else if (isFavourite){
                         Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
                         floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
                         isFavourite = false;
-                        //removeFromFavourites();
+                        removeFromFavourites(movieId);
                     }
 
                 }
@@ -168,18 +184,63 @@ public class Detail extends AppCompatActivity {
         }
     }
 
-    private void addToFavourites(Integer movieId, String movieJson) {
+    private void addToFavourites(Integer mid, String movieJson) {
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(TaskContract.TaskEntry.COLUMN_MID, movieId);
+        contentValues.put(TaskContract.TaskEntry.COLUMN_MID, mid);
 
         contentValues.put(TaskContract.TaskEntry.COLUMN_JSON, movieJson);
 
-        Uri uri = getContentResolver().insert(TaskContract.TaskEntry.CONTENT_URI, contentValues);
+        getContentResolver().insert(TaskContract.TaskEntry.CONTENT_URI, contentValues);
 
-        Toast.makeText(Detail.this, ""+uri, Toast.LENGTH_SHORT).show();
+    }
 
+    private void removeFromFavourites(Integer mid) {
+
+        String stringId = Integer.toString(mid);
+        Uri uri = TaskContract.TaskEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(stringId).build();
+
+        getContentResolver().delete(uri, null, null);
+    }
+
+    public class isFavouriteMovie extends AsyncTask<Void, Void, Cursor> {
+
+        String[] id = new String[1];
+
+        public isFavouriteMovie(Integer id) {
+            this.id[0] = id.toString();
+        }
+
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+
+            Cursor cursor = getApplicationContext().getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI,
+                    null,
+                    TaskContract.TaskEntry.COLUMN_MID + " = ? ",
+                    id,
+                    null);
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                isFavourite = true;
+            } else {
+                isFavourite = false;
+            }
+            if (isFavourite) {
+                floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
+                floatingActionButton.show();
+            } else {
+                floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
+                floatingActionButton.show();
+            }
+        }
     }
 
     @Override

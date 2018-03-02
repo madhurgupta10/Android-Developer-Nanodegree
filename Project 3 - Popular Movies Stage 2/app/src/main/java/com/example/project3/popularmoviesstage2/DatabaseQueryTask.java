@@ -1,21 +1,16 @@
 package com.example.project3.popularmoviesstage2;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.project3.popularmoviesstage2.data.TaskContentProvider;
 import com.example.project3.popularmoviesstage2.data.TaskContract;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,55 +48,59 @@ public class DatabaseQueryTask extends AsyncTask<Void, Void, Cursor> implements 
                 null,
                 null);
 
-        Log.d("Content Uri", ""+TaskContract.TaskEntry.CONTENT_URI);
         return cursor;
     }
 
     @Override
     protected void onPostExecute(Cursor cursor) {
-        mData = cursor;
-        mData.moveToFirst();
+        super.onPostExecute(cursor);
+        if (cursor!=null && cursor.getCount()>0) {
 
-        int results = mData.getCount();
+            mData = cursor;
+            mData.moveToFirst();
 
-        int movieJsonIndex = mData.getColumnIndex(TaskContract.TaskEntry.COLUMN_JSON);
+            int results = mData.getCount();
 
-        JSONObject jsonData = null;
-        try {
-            for(int i = 0; i < results; i++) {
-                jsonData = new JSONObject(mData.getString(movieJsonIndex));
-                String poster_path = jsonData.optString("poster_path");
-                posterUrls.add(poster_path);
-                mData.moveToNext();
+            int movieJsonIndex = mData.getColumnIndex(TaskContract.TaskEntry.COLUMN_JSON);
+
+            try {
+                for (int i = 0; i < results; i++) {
+                    JSONObject jsonData = new JSONObject(mData.getString(movieJsonIndex));
+                    String poster_path = jsonData.optString("poster_path");
+                    posterUrls.add(poster_path);
+                    mData.moveToNext();
+                }
+
+                final int orientation = context.getResources().getConfiguration().orientation;
+
+                if (orientation == 1) {
+                    // If Portrait set to 2 columns
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+
+                    recyclerView.setHasFixedSize(true);
+
+                    MyAdapter myAdapter = new MyAdapter(results, posterUrls, listener, context, progressBar);
+
+                    recyclerView.setAdapter(myAdapter);
+
+                } else {
+                    // Else set to 3 columns
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+
+                    recyclerView.setHasFixedSize(true);
+
+                    MyAdapter myAdapter = new MyAdapter(results, posterUrls, listener, context, progressBar);
+
+                    recyclerView.setAdapter(myAdapter);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-            final int orientation = context.getResources().getConfiguration().orientation;
-
-            if (orientation == 1) {
-                // If Portrait set to 2 columns
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-                recyclerView.setLayoutManager(gridLayoutManager);
-
-                recyclerView.setHasFixedSize(true);
-
-                MyAdapter myAdapter = new MyAdapter(results, posterUrls, listener, context, progressBar);
-
-                recyclerView.setAdapter(myAdapter);
-
-            } else {
-                // Else set to 3 columns
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
-                recyclerView.setLayoutManager(gridLayoutManager);
-
-                recyclerView.setHasFixedSize(true);
-
-                MyAdapter myAdapter = new MyAdapter(results, posterUrls, listener, context, progressBar);
-
-                recyclerView.setAdapter(myAdapter);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+            Toast.makeText(context, "Sorry No Favourites", Toast.LENGTH_SHORT).show();
         }
     }
 

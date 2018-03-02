@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity{
 
         TaskDbHelper taskDbHelper = new TaskDbHelper(this);
 
-        Toast.makeText(this, "Database Created", Toast.LENGTH_SHORT).show();
-
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.rv);
 
@@ -63,58 +61,63 @@ public class MainActivity extends AppCompatActivity{
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.popular) {
 
-            if (isNetworkConnected(this)) {
-                new QueryTask(this, recyclerView, "popular", progressBar).execute();
-
-                setTitle("Popular Movies - Popular");
-
-                Context context = MainActivity.this;
-                String textToShow = "Popular";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                return true;
-
-            } else {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
+            PopulatePosters populatePosters = new PopulatePosters("popular", "Popular", true, this);
+            return populatePosters.Query();
 
         } else if (itemThatWasClickedId == R.id.top_rated) {
 
-            if (isNetworkConnected(this)) {
-                new QueryTask(this, recyclerView, "top_rated", progressBar).execute();
-
-                setTitle("Popular Movies - Top Rated");
-
-                Context context = MainActivity.this;
-                String textToShow = "Top Rated";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                return true;
-            } else {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                return false;
-            }
+            PopulatePosters populatePosters = new PopulatePosters("top_rated", "Top Rated", true, this);
+            return populatePosters.Query();
 
         } else if (itemThatWasClickedId == R.id.favourite) {
 
-            if (isNetworkConnected(this)) {
-                new DatabaseQueryTask(this, recyclerView, "favourites", progressBar).execute();
-
-                setTitle("Popular Movies - Favourites");
-
-                Context context = MainActivity.this;
-                String textToShow = "Favourites";
-                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-                return true;
-            } else {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                return false;
-            }
+            PopulatePosters populatePosters = new PopulatePosters("favourites", "Favourites", this);
+            return populatePosters.Query();
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public class PopulatePosters {
+
+        private String path;
+        private boolean isOnlineQuery;
+        private String title;
+        private Context context;
+
+        public PopulatePosters(String path, String title, Context context) {
+            this.isOnlineQuery = false;
+            this.path = path;
+            this.title = title;
+            this.context = context;
+        }
+
+        public PopulatePosters(String path, String title, boolean isOnlineQuery, Context context) {
+            this.isOnlineQuery = isOnlineQuery;
+            this.path = path;
+            this.title = title;
+            this.context = context;
+        }
+
+        public boolean Query() {
+            if (isNetworkConnected(context)) {
+                if (isOnlineQuery) {
+                    new QueryTask(context, recyclerView, path, progressBar).execute();
+                    setTitle("Popular Movies - " + title);
+                    Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
+                    return true;
+                } else {
+                    new DatabaseQueryTask(context, recyclerView, path, progressBar).execute();
+                    setTitle("Popular Movies - " + title);
+                    Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
     }
 }

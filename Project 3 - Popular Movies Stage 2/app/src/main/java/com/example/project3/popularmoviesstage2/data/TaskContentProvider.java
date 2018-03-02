@@ -19,7 +19,7 @@ public class TaskContentProvider extends ContentProvider {
 
     public static final int TASKS = 100;
 
-    public static final int TASKS_WITH_ID = 101;
+    public static final int TASKS_WITH_MID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -27,7 +27,7 @@ public class TaskContentProvider extends ContentProvider {
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_FAVOURITES, TASKS);
-        uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_FAVOURITES + "/#", TASKS_WITH_ID);
+        uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_FAVOURITES + "/#", TASKS_WITH_MID);
 
         return uriMatcher;
     }
@@ -51,12 +51,25 @@ public class TaskContentProvider extends ContentProvider {
 
         Cursor returnCursor;
 
+        Log.d("uri", "query: "+ uri);
         switch (match) {
             case TASKS:
                 returnCursor = db.query(TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case TASKS_WITH_MID:
+                String normalizedMidString = uri.getLastPathSegment();
+                String[] selectionArguments = new String[]{normalizedMidString};
+
+                returnCursor = db.query(TABLE_NAME,
+                        projection,
+                        TaskContract.TaskEntry.COLUMN_MID + " = ? ",
+                        selectionArguments,
                         null,
                         null,
                         sortOrder);
@@ -86,7 +99,6 @@ public class TaskContentProvider extends ContentProvider {
 
         Uri returnUri;
 
-        Log.e("match", "insert: " + match);
         switch (match) {
             case TASKS:
                 long id = db.insert(TABLE_NAME, null, values);
@@ -106,7 +118,26 @@ public class TaskContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+
+        final SQLiteDatabase db = taskDbHelper.getWritableDatabase();
+
+        int match = sUriMatcher.match(uri);
+
+        int tasksDeleted;
+
+        switch (match) {
+            case TASKS_WITH_MID:
+                String id = uri.getPathSegments().get(1);
+                tasksDeleted = db.delete(TABLE_NAME, TaskContract.TaskEntry.COLUMN_MID + " = ? ", new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (tasksDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return tasksDeleted;
     }
 
     @Override
