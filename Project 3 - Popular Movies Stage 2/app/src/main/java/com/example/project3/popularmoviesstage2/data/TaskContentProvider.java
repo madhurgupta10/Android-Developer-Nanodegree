@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -43,7 +44,30 @@ public class TaskContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+
+        final SQLiteDatabase db = taskDbHelper.getReadableDatabase();
+
+        int match = sUriMatcher.match(uri);
+
+        Cursor returnCursor;
+
+        switch (match) {
+            case TASKS:
+                returnCursor = db.query(TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return returnCursor;
     }
 
     @Nullable
@@ -60,12 +84,21 @@ public class TaskContentProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
 
-        Log.d("match", "insert: "+match);
+        Uri returnUri;
 
-        long id = db.insert(TABLE_NAME, null, values);
-
-        Uri returnUri = ContentUris.withAppendedId(TaskContract.TaskEntry.CONTENT_URI, id);
-
+        Log.e("match", "insert: " + match);
+        switch (match) {
+            case TASKS:
+                long id = db.insert(TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(TaskContract.TaskEntry.CONTENT_URI, id);
+                } else {
+                    throw new SQLException("Failed" + uri);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown" + uri);
+        }
         getContext().getContentResolver().notifyChange(uri, null);
 
         return returnUri;

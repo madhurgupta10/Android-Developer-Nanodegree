@@ -38,7 +38,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
         this.context = context;
         this.recyclerView = recyclerView;
         this.listener = this;
-        this.key = "your api key";
+        this.key = BuildConfig.MY_MOVIE_DB_API_KEY;
     }
 
 

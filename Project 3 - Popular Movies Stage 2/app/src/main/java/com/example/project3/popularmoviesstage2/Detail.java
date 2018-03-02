@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.project3.popularmoviesstage2.data.TaskContentProvider;
 import com.example.project3.popularmoviesstage2.data.TaskContract;
 import com.example.project3.popularmoviesstage2.model.Movie;
 import com.google.gson.Gson;
@@ -119,9 +118,8 @@ public class Detail extends AppCompatActivity {
                 @SuppressLint("ResourceType")
                 public void onClick(View v) {
                     if (!isFavourite) {
-//                        Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
                         floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
-
                         addToFavourites(movie.getId(), json);
                         isFavourite = true;
                     } else if (isFavourite){

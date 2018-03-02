@@ -88,7 +88,24 @@ public class MainActivity extends AppCompatActivity{
                 setTitle("Popular Movies - Top Rated");
 
                 Context context = MainActivity.this;
-                String textToShow = "Top";
+                String textToShow = "Top Rated";
+                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+        } else if (itemThatWasClickedId == R.id.favourite) {
+
+            if (isNetworkConnected(this)) {
+                new DatabaseQueryTask(this, recyclerView, "favourites", progressBar).execute();
+
+                setTitle("Popular Movies - Favourites");
+
+                Context context = MainActivity.this;
+                String textToShow = "Favourites";
                 Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
                 return true;
             } else {
