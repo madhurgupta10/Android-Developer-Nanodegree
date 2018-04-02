@@ -2,10 +2,13 @@ package com.example.project3.popularmoviesstage2;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,6 +59,12 @@ public class Detail extends AppCompatActivity {
 
     FloatingActionButton floatingActionButton;
 
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,105 +90,110 @@ public class Detail extends AppCompatActivity {
 
         if (json.length() == 0 || key.length() == 0) {
 
-            json = getIntent().getExtras().getString("jsonAtIndex");
-            key = getIntent().getExtras().getString("apiKey");
+            if (isNetworkConnected(this)) {
 
-            final Movie movie = gson.fromJson(json, Movie.class);
+                json = getIntent().getExtras().getString("jsonAtIndex");
+                key = getIntent().getExtras().getString("apiKey");
 
-            movieId = movie.getId();
+                final Movie movie = gson.fromJson(json, Movie.class);
 
-            movieTrailers = findViewById(R.id.movie_trailers);
-            movieReviews = findViewById(R.id.movie_reviews);
+                movieId = movie.getId();
 
-            progressBarTrailers = findViewById(R.id.progress_bar_trailers);
-            progressBarReviews = findViewById(R.id.progress_bar_reviews);
+                movieTrailers = findViewById(R.id.movie_trailers);
+                movieReviews = findViewById(R.id.movie_reviews);
 
-            floatingActionButton = findViewById(R.id.fab);
-            floatingActionButton.hide();
+                progressBarTrailers = findViewById(R.id.progress_bar_trailers);
+                progressBarReviews = findViewById(R.id.progress_bar_reviews);
 
-            TextView title = findViewById(R.id.title_tv);
-            TextView desc = findViewById(R.id.desc_tv);
-            TextView rating = findViewById(R.id.rating_tv);
-            final TextView releaseDate = findViewById(R.id.date_tv);
-            ImageView backdropPath = findViewById(R.id.backdrop_iv);
-            ImageView poster = findViewById(R.id.poster_iv);
+                floatingActionButton = findViewById(R.id.fab);
+                floatingActionButton.hide();
 
-            progressBarTrailers.setVisibility(View.VISIBLE);
-            progressBarReviews.setVisibility(View.VISIBLE);
+                TextView title = findViewById(R.id.title_tv);
+                TextView desc = findViewById(R.id.desc_tv);
+                TextView rating = findViewById(R.id.rating_tv);
+                final TextView releaseDate = findViewById(R.id.date_tv);
+                ImageView backdropPath = findViewById(R.id.backdrop_iv);
+                ImageView poster = findViewById(R.id.poster_iv);
 
-
-            Picasso.with(this)
-                    .load("http://image.tmdb.org/t/p/original/"+movie.getBackdropPath())
-                    .into(backdropPath);
-
-            Picasso.with(this)
-                    .load("http://image.tmdb.org/t/p/w185/"+movie.getPosterPath())
-                    .into(poster);
-
-            progressBarBackdrop.setVisibility(View.INVISIBLE);
-
-            setTitle("");
-            rating.setText(String.format("Rating - %s", movie.getVoteAverage()));
-            releaseDate.setText(String.format("Release Date: %s", movie.getReleaseDate()));
-            title.setText(movie.getTitle());
-            desc.setText(movie.getOverview());
+                progressBarTrailers.setVisibility(View.VISIBLE);
+                progressBarReviews.setVisibility(View.VISIBLE);
 
 
-            //Check if the current movie is favourite or not
-            new isFavouriteMovie(movie.getId()).execute();
+                Picasso.with(this)
+                        .load("http://image.tmdb.org/t/p/original/"+movie.getBackdropPath())
+                        .into(backdropPath);
 
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("ResourceType")
-                public void onClick(View v) {
-                    if (!isFavourite) {
-                        Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
-                        floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
+                Picasso.with(this)
+                        .load("http://image.tmdb.org/t/p/w185/"+movie.getPosterPath())
+                        .into(poster);
 
-                        addToFavourites(movieId, json);
-                        isFavourite = true;
+                progressBarBackdrop.setVisibility(View.INVISIBLE);
 
-                    } else if (isFavourite){
-                        Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
-                        floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
-                        isFavourite = false;
-                        removeFromFavourites(movieId);
+                setTitle("");
+                rating.setText(String.format("Rating - %s", movie.getVoteAverage()));
+                releaseDate.setText(String.format("Release Date: %s", movie.getReleaseDate()));
+                title.setText(movie.getTitle());
+                desc.setText(movie.getOverview());
+
+
+                //Check if the current movie is favourite or not
+                new isFavouriteMovie(movie.getId()).execute();
+
+                floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("ResourceType")
+                    public void onClick(View v) {
+                        if (!isFavourite) {
+                            Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+                            floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
+
+                            addToFavourites(movieId, json);
+                            isFavourite = true;
+
+                        } else if (isFavourite){
+                            Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
+                            floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
+                            isFavourite = false;
+                            removeFromFavourites(movieId);
+                        }
+
                     }
+                });
 
+                if (dataTrailers.length() == 0) {
+
+                    Ion.with(this)
+                            .load("http://api.themoviedb.org/3/movie/" + movie.getId() + "/videos?api_key=" + key)
+                            .asString()
+                            .setCallback(new FutureCallback<String>() {
+                                @Override
+                                public void onCompleted(Exception e, String dataTrailers) {
+                                    progressBarTrailers.setVisibility(View.INVISIBLE);
+                                    Detail.this.dataTrailers = dataTrailers;
+                                    populateTrailers();
+                                }
+                            });
+                } else {
+                    populateTrailers();
                 }
-            });
 
-            if (dataTrailers.length() == 0) {
+                if (dataReviews.length() == 0) {
 
-                Ion.with(this)
-                        .load("http://api.themoviedb.org/3/movie/" + movie.getId() + "/videos?api_key=" + key)
-                        .asString()
-                        .setCallback(new FutureCallback<String>() {
-                            @Override
-                            public void onCompleted(Exception e, String dataTrailers) {
-                                progressBarTrailers.setVisibility(View.INVISIBLE);
-                                Detail.this.dataTrailers = dataTrailers;
-                                populateTrailers();
-                            }
-                        });
+                    Ion.with(this)
+                            .load("http://api.themoviedb.org/3/movie/" + movie.getId() + "/reviews?api_key=" + key)
+                            .asString()
+                            .setCallback(new FutureCallback<String>() {
+                                @Override
+                                public void onCompleted(Exception e, String dataReviews) {
+                                    Detail.this.dataReviews = dataReviews;
+                                    progressBarReviews.setVisibility(View.INVISIBLE);
+                                    populateReviews();
+                                }
+                            });
+                } else {
+                    populateReviews();
+                }
             } else {
-                populateTrailers();
-            }
-
-            if (dataReviews.length() == 0) {
-
-                Ion.with(this)
-                        .load("http://api.themoviedb.org/3/movie/" + movie.getId() + "/reviews?api_key=" + key)
-                        .asString()
-                        .setCallback(new FutureCallback<String>() {
-                            @Override
-                            public void onCompleted(Exception e, String dataReviews) {
-                                Detail.this.dataReviews = dataReviews;
-                                progressBarReviews.setVisibility(View.INVISIBLE);
-                                populateReviews();
-                            }
-                        });
-            } else {
-                populateReviews();
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }
         }
     }
