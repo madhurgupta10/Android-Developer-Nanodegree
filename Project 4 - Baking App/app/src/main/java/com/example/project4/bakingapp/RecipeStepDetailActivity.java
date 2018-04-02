@@ -10,6 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.example.project4.bakingapp.model.Recipe;
+import com.example.project4.bakingapp.model.Step;
+
+import java.util.ArrayList;
+
 /**
  * An activity representing a single recipe_step detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -52,11 +57,13 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(RecipeStepDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(RecipeStepDetailFragment.ARG_ITEM_ID));
+
+            Intent intent = this.getIntent();
+            Bundle args = intent.getBundleExtra("bundle");
+            Recipe recipe = (Recipe) args.getSerializable("Bundle");
+
             RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-            fragment.setArguments(arguments);
+            fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.recipestep_detail_container, fragment)
                     .commit();

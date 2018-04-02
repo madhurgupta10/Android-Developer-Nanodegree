@@ -1,22 +1,24 @@
 package com.example.project4.bakingapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.project4.bakingapp.dummy.DummyContent;
+import com.example.project4.bakingapp.adapter.RecipeIngredientAdapter;
+import com.example.project4.bakingapp.adapter.RecipeStepAdapter;
+import com.example.project4.bakingapp.model.Ingredient;
+import com.example.project4.bakingapp.model.Recipe;
+import com.example.project4.bakingapp.model.Step;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * An activity representing a list of recipe_steps. This activity
@@ -33,11 +35,20 @@ public class RecipeStepListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    static Recipe recipe;
+    ArrayList<Step> steps = new ArrayList<Step>();
+    ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipestep_list);
+
+        Intent intent = this.getIntent();
+        Bundle args = intent.getBundleExtra("bundle");
+        recipe = (Recipe) args.getSerializable("Bundle");
+        steps = (ArrayList<Step>) recipe.getSteps();
+        ingredients = (ArrayList<Ingredient>) recipe.getIngredients();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,80 +72,29 @@ public class RecipeStepListActivity extends AppCompatActivity {
         }
 
         View recyclerView = findViewById(R.id.recipestep_list);
-        assert recyclerView != null;
+        View ingRecyclerView = findViewById(R.id.ing_rv);
+
         setupRecyclerView((RecyclerView) recyclerView);
+        setupIngRecyclerView((RecyclerView) ingRecyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new RecipeStepAdapter(this, steps, ingredients, mTwoPane));
     }
+    private void setupIngRecyclerView(@NonNull RecyclerView recyclerView) {
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
 
-        private final RecipeStepListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
-        private final boolean mTwoPane;
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(RecipeStepDetailFragment.ARG_ITEM_ID, item.id);
-                    RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipestep_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                    intent.putExtra(RecipeStepDetailFragment.ARG_ITEM_ID, item.id);
+        recyclerView.setLayoutManager(layoutManager);
 
-                    context.startActivity(intent);
-                }
-            }
-        };
+        recyclerView.setHasFixedSize(true);
 
-        SimpleItemRecyclerViewAdapter(RecipeStepListActivity parent,
-                                      List<DummyContent.DummyItem> items,
-                                      boolean twoPane) {
-            mValues = items;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
-        }
+        RecipeIngredientAdapter myAdapter = new RecipeIngredientAdapter(ingredients, this.getApplicationContext());
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recipestep_list_content, parent, false);
-            return new ViewHolder(view);
-        }
+        recyclerView.setAdapter(myAdapter);
 
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
 
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
-
-            ViewHolder(View view) {
-                super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
-            }
-        }
+//        recyclerView.setAdapter(new RecipeIngredientAdapter(ingredients, this.getApplicationContext()));
     }
 }

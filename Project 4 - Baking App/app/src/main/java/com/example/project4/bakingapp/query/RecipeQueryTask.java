@@ -3,25 +3,30 @@ package com.example.project4.bakingapp.query;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.project4.bakingapp.RecipeStepListActivity;
 import com.example.project4.bakingapp.adapter.RecipeAdapter;
 import com.example.project4.bakingapp.model.Recipe;
+import com.example.project4.bakingapp.model.Step;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class RecipeQueryTask extends AsyncTask<Void, Void, String> implements RecipeAdapter.listItemClickListener{
+public class RecipeQueryTask extends AsyncTask<Void, Void, String>
+        implements RecipeAdapter.listItemClickListener{
 
     private String queryUrl;
     private Context context;
@@ -66,7 +71,8 @@ public class RecipeQueryTask extends AsyncTask<Void, Void, String> implements Re
                 JSONArray recipes = new JSONArray(data);
                 for (int i = 0; i < recipes.length(); i++) {
                     Gson gson = new Gson();
-                    Recipe recipe = gson.fromJson(String.valueOf(recipes.optJSONObject(i)), Recipe.class);
+                    Recipe recipe = gson.fromJson(String.valueOf(recipes.optJSONObject(i)),
+                            Recipe.class);
                     recipeArrayList.add(recipe);
                 }
 
@@ -75,7 +81,8 @@ public class RecipeQueryTask extends AsyncTask<Void, Void, String> implements Re
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
                 recyclerView.setLayoutManager(gridLayoutManager);
 
-                RecipeAdapter recipeAdapter = new RecipeAdapter(recipes.length(), recipeArrayList, onClickListener, context);
+                RecipeAdapter recipeAdapter = new RecipeAdapter(recipes.length(), recipeArrayList,
+                        onClickListener, context);
                 recyclerView.setAdapter(recipeAdapter);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -86,6 +93,9 @@ public class RecipeQueryTask extends AsyncTask<Void, Void, String> implements Re
     @Override
     public void onListItemClick(int clickedItemIndex) {
         Intent intent = new Intent(context, RecipeStepListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Bundle",(Serializable)recipeArrayList.get(clickedItemIndex));
+        intent.putExtra("bundle", bundle);
         context.startActivity(intent);
     }
 }

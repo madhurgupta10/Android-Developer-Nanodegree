@@ -28,7 +28,7 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.example.project4.bakingapp.RecipeStepListActivity"
-        tools:listitem="@layout/recipestep_list_content" />
+        tools:listitem="@layout/recipestep_card_layout" />
 
     <FrameLayout
         android:id="@+id/recipestep_detail_container"
