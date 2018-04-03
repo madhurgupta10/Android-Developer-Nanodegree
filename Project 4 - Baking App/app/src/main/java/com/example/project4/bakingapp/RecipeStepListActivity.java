@@ -94,7 +94,5 @@ public class RecipeStepListActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(myAdapter);
 
-
-//        recyclerView.setAdapter(new RecipeIngredientAdapter(ingredients, this.getApplicationContext()));
     }
 }

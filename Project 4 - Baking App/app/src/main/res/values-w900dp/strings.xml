@@ -3,5 +3,5 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="title_recipestep_list">recipe_steps</string>
     <string name="title_recipestep_detail">recipe_step Detail</string>
-    <bool name="is_tablet">false</bool>
+    <bool name="is_tablet">true</bool>
 </resources>

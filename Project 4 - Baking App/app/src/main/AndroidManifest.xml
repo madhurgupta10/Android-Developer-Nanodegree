@@ -18,11 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeStepActivity"></activity>
+        <activity android:name=".RecipeStepActivity" />
         <activity
             android:name=".RecipeStepListActivity"
             android:label="@string/title_recipestep_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RecipeStepDetailActivity"
             android:label="@string/title_recipestep_detail"
