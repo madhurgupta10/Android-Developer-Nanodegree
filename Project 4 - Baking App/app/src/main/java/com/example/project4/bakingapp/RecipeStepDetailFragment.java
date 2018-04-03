@@ -54,7 +54,7 @@ public class RecipeStepDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(step.getShortDescription());
+                appBarLayout.setTitle(recipe.getName());
             }
         }
     }
@@ -65,8 +65,8 @@ public class RecipeStepDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipestep_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (recipe != null) {
-            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(recipe.getName());
+        if (step != null) {
+            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(step.getShortDescription());
         }
 
         return rootView;

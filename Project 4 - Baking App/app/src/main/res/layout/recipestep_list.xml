@@ -20,6 +20,13 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="10dp">
 
+            <ImageView
+                android:alpha="0.8"
+                android:src="@color/black_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/img" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -27,11 +34,13 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
+                    android:textSize="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
-                    android:text="INGREDIENTS"/>
+                    android:textColor="@color/white"
+                    android:text="Ingredients"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="wrap_content"

@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.project4.bakingapp.RecipeStepListActivity;
 import com.example.project4.bakingapp.adapter.RecipeAdapter;
 import com.example.project4.bakingapp.model.Recipe;
 import com.google.gson.Gson;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -70,8 +74,9 @@ public class RecipeQueryTask extends AsyncTask<Void, Void, String>
             JSONArray recipes = new JSONArray(data);
             for (int i = 0; i < recipes.length(); i++) {
                 Gson gson = new Gson();
-                Recipe recipe = gson.fromJson(String.valueOf(recipes.optJSONObject(i)),
+                final Recipe recipe = gson.fromJson(String.valueOf(recipes.optJSONObject(i)),
                         Recipe.class);
+
                 recipeArrayList.add(recipe);
             }
 
