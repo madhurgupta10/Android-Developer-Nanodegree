@@ -34,10 +34,8 @@ public class RecipeStepListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
-    private boolean mTwoPane;
+    private boolean twoPane;
     static Recipe recipe;
-    ArrayList<Step> steps = new ArrayList<Step>();
-    ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +45,6 @@ public class RecipeStepListActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         Bundle args = intent.getBundleExtra("bundle");
         recipe = (Recipe) args.getSerializable("Bundle");
-        steps = (ArrayList<Step>) recipe.getSteps();
-        ingredients = (ArrayList<Ingredient>) recipe.getIngredients();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,7 +64,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
-            mTwoPane = true;
+            twoPane = true;
         }
 
         View recyclerView = findViewById(R.id.recipestep_list);
@@ -79,7 +75,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new RecipeStepAdapter(this, steps, ingredients, mTwoPane));
+        recyclerView.setAdapter(new RecipeStepAdapter(this, recipe, twoPane));
     }
     private void setupIngRecyclerView(@NonNull RecyclerView recyclerView) {
 
@@ -87,11 +83,9 @@ public class RecipeStepListActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
-
         recyclerView.setHasFixedSize(true);
-
-        RecipeIngredientAdapter myAdapter = new RecipeIngredientAdapter(ingredients, this.getApplicationContext());
-
+        RecipeIngredientAdapter myAdapter = new RecipeIngredientAdapter(
+                (ArrayList<Ingredient>) recipe.getIngredients(), this.getApplicationContext());
         recyclerView.setAdapter(myAdapter);
 
     }
