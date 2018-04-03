@@ -30,30 +30,6 @@ public class RecipeStepAdapter
     private final Recipe recipe;
     private final boolean twoPane;
 
-    private final View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Step items = (Step) view.getTag();
-
-            if (twoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putString(RecipeStepDetailFragment.ARG_ITEM_ID, items.getShortDescription());
-                RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-                fragment.setArguments(arguments);
-                parentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.recipestep_detail_container, fragment)
-                        .commit();
-            } else {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Bundle", recipe);
-                intent.putExtra("bundle", bundle);
-                context.startActivity(intent);
-            }
-        }
-    };
-
     public RecipeStepAdapter(RecipeStepListActivity parentActivity,
                              Recipe recipe, boolean twoPane) {
         
@@ -62,6 +38,33 @@ public class RecipeStepAdapter
         this.parentActivity = parentActivity;
         this.twoPane = twoPane;
     }
+
+    private final View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Step step = (Step) view.getTag();
+
+            if (twoPane) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("stepBundle", step);
+                bundle.putSerializable("recipeBundle", recipe);
+
+                RecipeStepDetailFragment recipeStepDetailFragment = new RecipeStepDetailFragment();
+                recipeStepDetailFragment.setArguments(bundle);
+                parentActivity.getSupportFragmentManager().beginTransaction()
+                        .add(R.id.recipestep_detail_container, recipeStepDetailFragment)
+                        .commit();
+            } else {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("stepBundle", step);
+                bundle.putSerializable("recipeBundle", recipe);
+                intent.putExtra("bundle", bundle);
+                context.startActivity(intent);
+            }
+        }
+    };
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

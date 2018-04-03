@@ -95,7 +95,7 @@ public class RecipeQueryTask extends AsyncTask<Void, Void, String>
     public void onListItemClick(int clickedItemIndex) {
         Intent intent = new Intent(context, RecipeStepListActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Bundle",(Serializable)recipeArrayList.get(clickedItemIndex));
+        bundle.putSerializable("Bundle", recipeArrayList.get(clickedItemIndex));
         intent.putExtra("bundle", bundle);
         context.startActivity(intent);
     }

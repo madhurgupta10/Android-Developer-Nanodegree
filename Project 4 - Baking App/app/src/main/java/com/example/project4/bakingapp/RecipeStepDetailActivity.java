@@ -9,6 +9,7 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.project4.bakingapp.model.Recipe;
 import com.example.project4.bakingapp.model.Step;
@@ -59,13 +60,11 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             // using a fragment transaction.
 
             Intent intent = this.getIntent();
-            Bundle args = intent.getBundleExtra("bundle");
-            Recipe recipe = (Recipe) args.getSerializable("Bundle");
-
-            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-            fragment.setArguments(args);
+            Bundle bundle = intent.getBundleExtra("bundle");
+            RecipeStepDetailFragment recipeStepDetailFragment = new RecipeStepDetailFragment();
+            recipeStepDetailFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipestep_detail_container, fragment)
+                    .add(R.id.recipestep_detail_container, recipeStepDetailFragment)
                     .commit();
         }
     }

@@ -3,6 +3,7 @@ package com.example.project4.bakingapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.project4.bakingapp.adapter.RecipeIngredientAdapter;
 import com.example.project4.bakingapp.adapter.RecipeStepAdapter;
@@ -43,12 +45,14 @@ public class RecipeStepListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipestep_list);
 
         Intent intent = this.getIntent();
-        Bundle args = intent.getBundleExtra("bundle");
-        recipe = (Recipe) args.getSerializable("Bundle");
+        Bundle bundle = intent.getBundleExtra("bundle");
+        recipe = (Recipe) bundle.getSerializable("Bundle");
 
+        setTitle(recipe.getName());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

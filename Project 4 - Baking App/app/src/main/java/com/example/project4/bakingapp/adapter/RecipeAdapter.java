@@ -38,9 +38,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         Context context = viewGroup.getContext();
         int layoutIdForList = R.layout.recipe_card_layout;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForList, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForList, viewGroup, false);
         return new MyViewHolder(view);
     }
 

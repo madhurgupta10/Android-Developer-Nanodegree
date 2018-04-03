@@ -9,6 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.project4.bakingapp.model.Recipe;
+import com.example.project4.bakingapp.model.Step;
+
+import static com.example.project4.bakingapp.RecipeStepListActivity.recipe;
+
 /**
  * A fragment representing a single recipe_step detail screen.
  * This fragment is either contained in a {@link RecipeStepListActivity}
@@ -21,6 +26,7 @@ public class RecipeStepDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private static Step step;
 
     /**
      * The dummy content this fragment is presenting.
@@ -37,18 +43,20 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (getArguments().containsKey(ARG_ITEM_ID)) {
-//            // Load the dummy content specified by the fragment
-//            // arguments. In a real-world scenario, use a Loader
-//            // to load content from a content provider.
-//            mItem = ;
-//
-//            Activity activity = this.getActivity();
-//            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-//            if (appBarLayout != null) {
-//                appBarLayout.setTitle(mItem.content);
-//            }
-//        }
+        if (getArguments() != null) {
+            // Load the dummy content specified by the fragment
+            // arguments. In a real-world scenario, use a Loader
+            // to load content from a content provider.
+            Bundle args = getArguments();
+            step = (Step) args.getSerializable("stepBundle");
+            recipe = (Recipe) args.getSerializable("recipeBundle");
+
+            Activity activity = this.getActivity();
+            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            if (appBarLayout != null) {
+                appBarLayout.setTitle(step.getShortDescription());
+            }
+        }
     }
 
     @Override
@@ -57,9 +65,9 @@ public class RecipeStepDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipestep_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-//        if (mItem != null) {
-//            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText("");
-//        }
+        if (recipe != null) {
+            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(recipe.getName());
+        }
 
         return rootView;
     }
