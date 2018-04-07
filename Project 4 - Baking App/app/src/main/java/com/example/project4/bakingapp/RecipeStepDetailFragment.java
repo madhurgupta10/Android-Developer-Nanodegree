@@ -16,28 +16,9 @@ import com.squareup.picasso.Picasso;
 
 import static com.example.project4.bakingapp.RecipeStepListActivity.recipe;
 
-/**
- * A fragment representing a single recipe_step detail screen.
- * This fragment is either contained in a {@link RecipeStepListActivity}
- * in two-pane mode (on tablets) or a {@link RecipeStepDetailActivity}
- * on handsets.
- */
 public class RecipeStepDetailFragment extends Fragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
-    public static final String ARG_ITEM_ID = "item_id";
     private static Step step;
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public RecipeStepDetailFragment() {
     }
 
@@ -46,9 +27,6 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
             Bundle args = getArguments();
             step = (Step) args.getSerializable("stepBundle");
             recipe = (Recipe) args.getSerializable("recipeBundle");
@@ -74,7 +52,6 @@ public class RecipeStepDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipestep_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
         if (step != null) {
             ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(step.getShortDescription());
         }
