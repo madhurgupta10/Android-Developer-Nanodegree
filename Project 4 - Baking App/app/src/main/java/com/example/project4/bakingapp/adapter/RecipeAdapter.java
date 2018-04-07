@@ -110,6 +110,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                                                     .fit()
                                                     .centerCrop()
                                                     .into(imageView);
+                                            textViewRecipeName.setTextColor(Color.parseColor("#FFFFFF"));
                                         } else {
                                             textViewRecipeName.setTextColor(Color.parseColor("#000000"));
                                         }

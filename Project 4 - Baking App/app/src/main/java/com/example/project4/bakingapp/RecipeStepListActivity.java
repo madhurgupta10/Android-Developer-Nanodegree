@@ -3,6 +3,8 @@ package com.example.project4.bakingapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenu;
+import android.support.design.widget.NavigationView;
 import android.support.v4.media.session.IMediaControllerCallback;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,7 +35,8 @@ import java.util.ArrayList;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeStepListActivity extends AppCompatActivity {
+public class RecipeStepListActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -96,6 +100,16 @@ public class RecipeStepListActivity extends AppCompatActivity {
         RecipeIngredientAdapter myAdapter = new RecipeIngredientAdapter(recipe, this.getApplicationContext(),
                 imageView);
         recyclerView.setAdapter(myAdapter);
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 }

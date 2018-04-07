@@ -24,6 +24,13 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
+            <ImageView
+                android:alpha="0.8"
+                android:src="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/img_toolbar"/>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"
@@ -43,12 +50,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
+        app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/recipestep_detail_container"
-        app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/add_icon" />
 
 </android.support.design.widget.CoordinatorLayout>

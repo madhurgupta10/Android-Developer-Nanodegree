@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.project4.bakingapp.model.Recipe;
 import com.example.project4.bakingapp.model.Step;
+import com.squareup.picasso.Picasso;
 
 import static com.example.project4.bakingapp.RecipeStepListActivity.recipe;
 
@@ -52,7 +54,15 @@ public class RecipeStepDetailFragment extends Fragment {
             recipe = (Recipe) args.getSerializable("recipeBundle");
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+            ImageView imageView = activity.findViewById(R.id.img_toolbar);
+
+            Picasso.with(this.getContext())
+                    .load(recipe.getImage())
+                    .fit()
+                    .centerCrop()
+                    .into(imageView);
+
             if (appBarLayout != null) {
                 appBarLayout.setTitle(recipe.getName());
             }

@@ -1,12 +1,7 @@
 package com.example.project4.bakingapp.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.provider.ContactsContract;
-import android.support.v4.media.session.IMediaControllerCallback;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +11,6 @@ import android.widget.TextView;
 import com.example.project4.bakingapp.R;
 import com.example.project4.bakingapp.model.Ingredient;
 import com.example.project4.bakingapp.model.Recipe;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -62,20 +56,9 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
             textView = itemView.findViewById(R.id.ing_tv);
         }
 
-        @SuppressLint("SetTextI18n")
-        void bind(int position) {
-            textView.setText(ingredients.get(position).getIngredient()+" ("+
-                    ingredients.get(position).getQuantity()+ingredients.get(position).getMeasure()+")");
-
-            if (recipe.getImage().length() != 0) {
-                Picasso.with(context)
-                        .load(recipe.getImage())
-                        .fit()
-                        .centerCrop()
-                        .into(imageView);
-            } else {
-                textView.setTextColor(Color.parseColor("#000000"));
-            }
+        void bind(final int position) {
+            textView.setText(String.format("%s (%s%s)", ingredients.get(position).getIngredient(),
+                    ingredients.get(position).getQuantity(), ingredients.get(position).getMeasure()));
         }
     }
 }
