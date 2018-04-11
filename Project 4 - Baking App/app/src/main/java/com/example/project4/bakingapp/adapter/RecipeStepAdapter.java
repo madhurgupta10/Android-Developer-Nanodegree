@@ -3,25 +3,22 @@ package com.example.project4.bakingapp.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.project4.bakingapp.R;
 import com.example.project4.bakingapp.RecipeStepDetailActivity;
 import com.example.project4.bakingapp.RecipeStepDetailFragment;
 import com.example.project4.bakingapp.RecipeStepListActivity;
-import com.example.project4.bakingapp.model.Ingredient;
 import com.example.project4.bakingapp.model.Recipe;
 import com.example.project4.bakingapp.model.Step;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class RecipeStepAdapter
         extends RecyclerView.Adapter<RecipeStepAdapter.ViewHolder> {
@@ -77,6 +74,11 @@ public class RecipeStepAdapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.idView.setText(steps.get(position).getShortDescription());
+
+        Glide.with(this.parentActivity.getApplicationContext())
+                .load(steps.get(position).getVideoURL())
+                .into(holder.imageView);
+
         holder.itemView.setTag(steps.get(position));
         holder.itemView.setOnClickListener(onClickListener);
     }
@@ -93,10 +95,12 @@ public class RecipeStepAdapter
 
     class ViewHolder extends RecyclerView.ViewHolder {
         final TextView idView;
+        final ImageView imageView;
 
         ViewHolder(View view) {
             super(view);
             idView = view.findViewById(R.id.id_text);
+            imageView = view.findViewById(R.id.step_card_iv);
         }
     }
 }

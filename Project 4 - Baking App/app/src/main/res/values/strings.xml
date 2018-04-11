@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Baking App</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="title_recipestep_list">recipe_steps</string>
-    <string name="title_recipestep_detail">recipe_step Detail</string>
+    <string name="title_recipestep_list">""</string>
+    <string name="title_recipestep_detail">""</string>
     <bool name="is_tablet">false</bool>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
