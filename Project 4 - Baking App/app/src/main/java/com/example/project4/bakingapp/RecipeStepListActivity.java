@@ -120,7 +120,6 @@ public class RecipeStepListActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         int id = item.getItemId();
         //Ref https://stackoverflow.com/questions/21850817/clear-backstack-history-navigationdrawer-item-selected
         Intent intent = new Intent(this.getApplicationContext(), RecipeStepListActivity.class);

@@ -80,121 +80,106 @@ public class Detail extends AppCompatActivity {
         progressBarBackdrop = findViewById(R.id.progress_bar_backdrop);
         progressBarBackdrop.setVisibility(View.VISIBLE);
 
-        dataReviews = "";
-        dataTrailers = "";
-
-        json = "";
-        key = "";
-
         Gson gson = new Gson();
 
-        if (json.length() == 0 || key.length() == 0) {
+        json = getIntent().getExtras().getString("jsonAtIndex");
+        key = getIntent().getExtras().getString("apiKey");
 
-            if (isNetworkConnected(this)) {
+        final Movie movie = gson.fromJson(json, Movie.class);
 
-                json = getIntent().getExtras().getString("jsonAtIndex");
-                key = getIntent().getExtras().getString("apiKey");
+        movieId = movie.getId();
 
-                final Movie movie = gson.fromJson(json, Movie.class);
+        movieTrailers = findViewById(R.id.movie_trailers);
+        movieReviews = findViewById(R.id.movie_reviews);
 
-                movieId = movie.getId();
+        progressBarTrailers = findViewById(R.id.progress_bar_trailers);
+        progressBarReviews = findViewById(R.id.progress_bar_reviews);
 
-                movieTrailers = findViewById(R.id.movie_trailers);
-                movieReviews = findViewById(R.id.movie_reviews);
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.hide();
 
-                progressBarTrailers = findViewById(R.id.progress_bar_trailers);
-                progressBarReviews = findViewById(R.id.progress_bar_reviews);
+        TextView title = findViewById(R.id.title_tv);
+        TextView desc = findViewById(R.id.desc_tv);
+        TextView rating = findViewById(R.id.rating_tv);
+        final TextView releaseDate = findViewById(R.id.date_tv);
+        ImageView backdropPath = findViewById(R.id.backdrop_iv);
+        ImageView poster = findViewById(R.id.poster_iv);
 
-                floatingActionButton = findViewById(R.id.fab);
-                floatingActionButton.hide();
+        progressBarTrailers.setVisibility(View.VISIBLE);
+        progressBarReviews.setVisibility(View.VISIBLE);
 
-                TextView title = findViewById(R.id.title_tv);
-                TextView desc = findViewById(R.id.desc_tv);
-                TextView rating = findViewById(R.id.rating_tv);
-                final TextView releaseDate = findViewById(R.id.date_tv);
-                ImageView backdropPath = findViewById(R.id.backdrop_iv);
-                ImageView poster = findViewById(R.id.poster_iv);
+        if (savedInstanceState == null) {
+            queryTrailerAndReviews(String.valueOf(movie.getId()));
+        } else {
+            this.dataReviews = savedInstanceState.getString("dataReviews");
+            this.dataTrailers = savedInstanceState.getString("dataTrailers");
+            populateTrailers();
+            populateReviews();
+        }
 
-                progressBarTrailers.setVisibility(View.VISIBLE);
-                progressBarReviews.setVisibility(View.VISIBLE);
+        Picasso.with(this)
+                .load("http://image.tmdb.org/t/p/original/"+movie.getBackdropPath())
+                .into(backdropPath);
 
+        Picasso.with(this)
+                .load("http://image.tmdb.org/t/p/w185/"+movie.getPosterPath())
+                .into(poster);
 
-                Picasso.with(this)
-                        .load("http://image.tmdb.org/t/p/original/"+movie.getBackdropPath())
-                        .into(backdropPath);
+        progressBarBackdrop.setVisibility(View.INVISIBLE);
 
-                Picasso.with(this)
-                        .load("http://image.tmdb.org/t/p/w185/"+movie.getPosterPath())
-                        .into(poster);
+        setTitle("");
+        rating.setText(String.format("Rating - %s", movie.getVoteAverage()));
+        releaseDate.setText(String.format("Release Date: %s", movie.getReleaseDate()));
+        title.setText(movie.getTitle());
+        desc.setText(movie.getOverview());
 
-                progressBarBackdrop.setVisibility(View.INVISIBLE);
+        //Check if the current movie is favourite or not
+        new isFavouriteMovie(movie.getId()).execute();
 
-                setTitle("");
-                rating.setText(String.format("Rating - %s", movie.getVoteAverage()));
-                releaseDate.setText(String.format("Release Date: %s", movie.getReleaseDate()));
-                title.setText(movie.getTitle());
-                desc.setText(movie.getOverview());
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            public void onClick(View v) {
+                if (!isFavourite) {
+                    Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+                    floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
+                    addToFavourites(movieId, json);
+                    isFavourite = true;
 
-
-                //Check if the current movie is favourite or not
-                new isFavouriteMovie(movie.getId()).execute();
-
-                floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                    @SuppressLint("ResourceType")
-                    public void onClick(View v) {
-                        if (!isFavourite) {
-                            Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
-                            floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
-
-                            addToFavourites(movieId, json);
-                            isFavourite = true;
-
-                        } else if (isFavourite){
-                            Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
-                            floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
-                            isFavourite = false;
-                            removeFromFavourites(movieId);
-                        }
-
-                    }
-                });
-
-                if (dataTrailers.length() == 0) {
-
-                    Ion.with(this)
-                            .load("http://api.themoviedb.org/3/movie/" + movie.getId() + "/videos?api_key=" + key)
-                            .asString()
-                            .setCallback(new FutureCallback<String>() {
-                                @Override
-                                public void onCompleted(Exception e, String dataTrailers) {
-                                    progressBarTrailers.setVisibility(View.INVISIBLE);
-                                    Detail.this.dataTrailers = dataTrailers;
-                                    populateTrailers();
-                                }
-                            });
-                } else {
-                    populateTrailers();
+                } else if (isFavourite){
+                    Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
+                    floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
+                    isFavourite = false;
+                    removeFromFavourites(movieId);
                 }
 
-                if (dataReviews.length() == 0) {
-
-                    Ion.with(this)
-                            .load("http://api.themoviedb.org/3/movie/" + movie.getId() + "/reviews?api_key=" + key)
-                            .asString()
-                            .setCallback(new FutureCallback<String>() {
-                                @Override
-                                public void onCompleted(Exception e, String dataReviews) {
-                                    Detail.this.dataReviews = dataReviews;
-                                    progressBarReviews.setVisibility(View.INVISIBLE);
-                                    populateReviews();
-                                }
-                            });
-                } else {
-                    populateReviews();
-                }
-            } else {
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void queryTrailerAndReviews(String movieId) {
+        if (isNetworkConnected(this)) {
+            Ion.with(this)
+                    .load("http://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=" + key)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String dataTrailers) {
+                            Detail.this.dataTrailers = dataTrailers;
+                            populateTrailers();
+                        }
+                    });
+            Ion.with(this)
+                    .load("http://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=" + key)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String dataReviews) {
+                            Detail.this.dataReviews = dataReviews;
+                            populateReviews();
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -263,8 +248,6 @@ public class Detail extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("dataReviews", dataReviews);
         savedInstanceState.putString("dataTrailers", dataTrailers);
-        savedInstanceState.putString("json", json);
-        savedInstanceState.putString("key", key);
     }
 
 
@@ -272,14 +255,15 @@ public class Detail extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
 
         super.onRestoreInstanceState(savedInstanceState);
-        dataTrailers = savedInstanceState.getString("dataTrailers");
-        dataReviews = savedInstanceState.getString("dataReviews");
-        key = savedInstanceState.getString("key");
-        json = savedInstanceState.getString("json");
+        this.dataReviews = savedInstanceState.getString("dataReviews");
+        this.dataTrailers = savedInstanceState.getString("dataTrailers");
+        populateTrailers();
+        populateReviews();
     }
 
     private void populateTrailers() {
         try {
+            progressBarTrailers.setVisibility(View.INVISIBLE);
             jsonDataTrailers = new JSONObject(dataTrailers);
             JSONArray results = jsonDataTrailers.optJSONArray("results");
 
@@ -324,6 +308,7 @@ public class Detail extends AppCompatActivity {
 
     private void populateReviews() {
         try {
+            progressBarReviews.setVisibility(View.INVISIBLE);
             jsonDataReviews = new JSONObject(dataReviews);
             JSONArray results = jsonDataReviews.optJSONArray("results");
             if (results.length() > 0) {

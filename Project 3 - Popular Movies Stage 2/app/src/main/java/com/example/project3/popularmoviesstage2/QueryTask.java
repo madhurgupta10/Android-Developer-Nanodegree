@@ -25,6 +25,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     private List<String> posterUrls = new ArrayList<String>();
     JSONArray results;
 
+    String data;
     private ProgressBar progressBar;
     private String path;
     private String key;
@@ -41,6 +42,9 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
         this.key = BuildConfig.MY_MOVIE_DB_API_KEY;
     }
 
+    public String getData() {
+        return data;
+    }
 
     @Override
     protected String doInBackground(Void... params) {
@@ -50,12 +54,10 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
                 .url("http://api.themoviedb.org/3/movie/"+path+"?api_key="+key)
                 .build();
 
-        String data = null;
-
         try {
             Response response = client.newCall(request).execute();
 
-            data = response.body().string();
+            this.data = response.body().string();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,8 +69,11 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
     @Override
     protected void onPostExecute(String data) {
         super.onPostExecute(data);
-        if (data != null) {
+        createRecyclerView(data);
+    }
 
+    public void createRecyclerView(String data) {
+        if (data != null) {
             try {
                 JSONObject jsonData = new JSONObject(data);
                 results = jsonData.optJSONArray("results");
@@ -80,30 +85,14 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
                     posterUrls.add(poster_path);
                 }
 
-                final int orientation = context.getResources().getConfiguration().orientation;
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+                recyclerView.setLayoutManager(gridLayoutManager);
 
-                if (orientation == 1) {
-                    // If Portrait set to 2 columns
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-                    recyclerView.setLayoutManager(gridLayoutManager);
+                recyclerView.setHasFixedSize(true);
 
-                    recyclerView.setHasFixedSize(true);
+                MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, progressBar);
 
-                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, progressBar);
-
-                    recyclerView.setAdapter(myAdapter);
-
-                } else {
-                    // Else set to 3 columns
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
-                    recyclerView.setLayoutManager(gridLayoutManager);
-
-                    recyclerView.setHasFixedSize(true);
-
-                    MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls, listener, context, progressBar);
-
-                    recyclerView.setAdapter(myAdapter);
-                }
+                recyclerView.setAdapter(myAdapter);
 
             } catch (JSONException e) {
                 e.printStackTrace();

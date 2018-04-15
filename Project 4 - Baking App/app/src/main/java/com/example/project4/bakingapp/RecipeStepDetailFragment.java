@@ -40,6 +40,7 @@ public class RecipeStepDetailFragment extends Fragment {
     private static Step step;
     SimpleExoPlayerView simpleExoPlayerView;
     SimpleExoPlayer exoPlayer;
+    int ORIENTATION;
 
     public RecipeStepDetailFragment() {
     }
@@ -48,27 +49,32 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ORIENTATION = this.getActivity().getResources().getConfiguration().orientation;
+
         if (getArguments() != null) {
             Bundle args = getArguments();
             step = (Step) args.getSerializable("stepBundle");
             recipe = (Recipe) args.getSerializable("recipeBundle");
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
-            ImageView imageView = activity.findViewById(R.id.img_toolbar);
 
-            this.getActivity().setTitle(recipe.getName());
+            if (ORIENTATION == 1) {
+                CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+                ImageView imageView = activity.findViewById(R.id.img_toolbar);
 
-            if (recipe.getImage().length() != 0) {
-                Picasso.with(this.getContext())
-                        .load(recipe.getImage())
-                        .fit()
-                        .centerCrop()
-                        .into(imageView);
-            }
+                this.getActivity().setTitle(recipe.getName());
 
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(recipe.getName());
+                if (recipe.getImage() != null && recipe.getImage().length() > 0 && imageView != null) {
+                    Picasso.with(this.getContext())
+                            .load(recipe.getImage())
+                            .fit()
+                            .centerCrop()
+                            .into(imageView);
+                }
+
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(recipe.getName());
+                }
             }
         }
     }
@@ -79,7 +85,10 @@ public class RecipeStepDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipestep_detail, container, false);
 
         if (step != null) {
-            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(step.getDescription());
+            final int ORIENTATION = this.getActivity().getResources().getConfiguration().orientation;
+            if (ORIENTATION == 1) {
+                ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(step.getDescription());
+            }
             simpleExoPlayerView = rootView.findViewById(R.id.exo_player);
             String mediaUrl = step.getVideoURL();
             if (mediaUrl.length() == 0) {
@@ -92,6 +101,11 @@ public class RecipeStepDetailFragment extends Fragment {
 
         return rootView;
     }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        mPlayerFragment.pause();
+//    }
 
     private void initializePlayer(String mediaUrl) {
 

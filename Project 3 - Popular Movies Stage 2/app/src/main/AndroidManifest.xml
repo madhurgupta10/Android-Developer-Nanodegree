@@ -13,16 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Detail"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity android:name=".Detail" />
         <provider
             android:authorities="com.example.project3.popularmoviesstage2"
             android:name="com.example.project3.popularmoviesstage2.data.TaskContentProvider" />
