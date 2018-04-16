@@ -36,7 +36,7 @@ import org.json.JSONObject;
 
 
 
-public class Detail extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity {
 
     LinearLayout movieTrailers;
     LinearLayout movieReviews;
@@ -113,8 +113,10 @@ public class Detail extends AppCompatActivity {
         } else {
             this.dataReviews = savedInstanceState.getString("dataReviews");
             this.dataTrailers = savedInstanceState.getString("dataTrailers");
-            populateTrailers();
-            populateReviews();
+            if (dataReviews != null || dataTrailers != null) {
+                populateTrailers();
+                populateReviews();
+            }
         }
 
         Picasso.with(this)
@@ -140,13 +142,13 @@ public class Detail extends AppCompatActivity {
             @SuppressLint("ResourceType")
             public void onClick(View v) {
                 if (!isFavourite) {
-                    Toast.makeText(Detail.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailActivity.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
                     floatingActionButton.setImageResource(R.drawable.btn_star_big_on);
                     addToFavourites(movieId, json);
                     isFavourite = true;
 
                 } else if (isFavourite){
-                    Toast.makeText(Detail.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailActivity.this, "Removed from Favourites", Toast.LENGTH_SHORT).show();
                     floatingActionButton.setImageResource(R.drawable.btn_star_big_off);
                     isFavourite = false;
                     removeFromFavourites(movieId);
@@ -164,7 +166,7 @@ public class Detail extends AppCompatActivity {
                     .setCallback(new FutureCallback<String>() {
                         @Override
                         public void onCompleted(Exception e, String dataTrailers) {
-                            Detail.this.dataTrailers = dataTrailers;
+                            DetailActivity.this.dataTrailers = dataTrailers;
                             populateTrailers();
                         }
                     });
@@ -174,7 +176,7 @@ public class Detail extends AppCompatActivity {
                     .setCallback(new FutureCallback<String>() {
                         @Override
                         public void onCompleted(Exception e, String dataReviews) {
-                            Detail.this.dataReviews = dataReviews;
+                            DetailActivity.this.dataReviews = dataReviews;
                             populateReviews();
                         }
                     });
@@ -257,8 +259,10 @@ public class Detail extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         this.dataReviews = savedInstanceState.getString("dataReviews");
         this.dataTrailers = savedInstanceState.getString("dataTrailers");
-        populateTrailers();
-        populateReviews();
+        if (dataTrailers != null || dataReviews != null) {
+            populateTrailers();
+            populateReviews();
+        }
     }
 
     private void populateTrailers() {
@@ -271,9 +275,9 @@ public class Detail extends AppCompatActivity {
                 for (int i = 0; i < results.length(); i++) {
                     JSONObject result = results.optJSONObject(i);
                     final String youtubeKey = result.optString("key");
-                    ImageView imageView = new ImageView(Detail.this);
+                    ImageView imageView = new ImageView(DetailActivity.this);
 
-                    Picasso.with(Detail.this)
+                    Picasso.with(DetailActivity.this)
                             .load("https://img.youtube.com/vi/" + youtubeKey + "/0.jpg")
                             .into(imageView);
                     movieTrailers.addView(imageView);
@@ -292,7 +296,7 @@ public class Detail extends AppCompatActivity {
                     marginParams.setMargins(5, 0, 5, 10);
                 }
             } else {
-                TextView textView = new TextView(Detail.this);
+                TextView textView = new TextView(DetailActivity.this);
                 textView.setText("Sorry No Trailers Found");
                 textView.setTextColor(Color.parseColor("#abb4c6"));
                 textView.setTextSize(30);
@@ -317,10 +321,10 @@ public class Detail extends AppCompatActivity {
                     final String author = result.optString("author");
                     final String review = result.optString("content");
 
-                    LinearLayout linearLayout = new LinearLayout(Detail.this);
+                    LinearLayout linearLayout = new LinearLayout(DetailActivity.this);
                     linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                    TextView textViewAuthor = new TextView(Detail.this);
+                    TextView textViewAuthor = new TextView(DetailActivity.this);
                     textViewAuthor.setText(author);
                     textViewAuthor.setTextColor(Color.parseColor("#FFFFFF"));
 
@@ -333,7 +337,7 @@ public class Detail extends AppCompatActivity {
                     ViewGroup.MarginLayoutParams marginParamsAuthor = (ViewGroup.MarginLayoutParams) textViewAuthor.getLayoutParams();
                     marginParamsAuthor.setMargins(40, 20, 20, 20);
 
-                    TextView textViewReview = new TextView(Detail.this);
+                    TextView textViewReview = new TextView(DetailActivity.this);
                     textViewReview.setText(review);
                     textViewReview.setTextColor(Color.parseColor("#abb4c6"));
 
@@ -345,7 +349,7 @@ public class Detail extends AppCompatActivity {
 
                 }
             } else {
-                TextView textView = new TextView(Detail.this);
+                TextView textView = new TextView(DetailActivity.this);
                 textView.setText("Sorry No Reviews Found");
                 textView.setTextColor(Color.parseColor("#abb4c6"));
                 textView.setTextSize(30);

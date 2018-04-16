@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Detail" />
+        <activity android:name=".DetailActivity" />
         <provider
             android:authorities="com.example.project3.popularmoviesstage2"
             android:name="com.example.project3.popularmoviesstage2.data.TaskContentProvider" />
