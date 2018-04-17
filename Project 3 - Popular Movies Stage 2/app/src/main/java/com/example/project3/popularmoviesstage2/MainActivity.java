@@ -13,7 +13,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
     String path;
     String title;
     boolean isOnlineQuery;
+    JSONArray results;
 
     String key = BuildConfig.MY_MOVIE_DB_API_KEY;
 
@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements
 
         new TaskDbHelper(this);
 
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.rv);
 
@@ -75,13 +73,47 @@ public class MainActivity extends AppCompatActivity implements
             this.title = title;
             this.path = path;
             this.isOnlineQuery = isOnlineQuery;
+            String s = savedInstanceState.getString("jsonArray");
+            try {
+                this.results = new JSONArray(s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            List<String> posterUrls = new ArrayList<>();
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject result = results.optJSONObject(i);
+                String poster_path = result.optString("poster_path");
+                posterUrls.add(poster_path);
+            }
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this,
+                    2);
+            recyclerView.setLayoutManager(gridLayoutManager);
+
+            recyclerView.setHasFixedSize(true);
+            MyAdapter.listItemClickListener listener = new MyAdapter.listItemClickListener() {
+                @Override
+                public void onListItemClick(int clickedItemIndex) {
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    JSONObject jsonAtIndex = results.optJSONObject(clickedItemIndex);
+                    intent.putExtra("jsonAtIndex", jsonAtIndex.toString());
+                    intent.putExtra("apiKey", key);
+                    MainActivity.this.startActivity(intent);
+                }
+            };
+
+            MyAdapter myAdapter = new MyAdapter(results.length(), posterUrls,
+                    listener, MainActivity.this, progressBar);
+
+            recyclerView.setAdapter(myAdapter);
+
         } else {
             this.title = "Popular";
             this.path = "popular";
             this.isOnlineQuery = true;
+            Query(this.path, this.title, this.isOnlineQuery);
         }
-        Query(this.path, this.title, this.isOnlineQuery);
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -96,20 +128,22 @@ public class MainActivity extends AppCompatActivity implements
         if (itemThatWasClickedId == R.id.popular) {
             this.title = "Popular";
             this.path = "popular";
+            this.isOnlineQuery = true;
             Query("popular", "Popular",true);
             return true;
 
         } else if (itemThatWasClickedId == R.id.top_rated) {
             this.title = "Top Rated";
             this.path = "top_rated";
+            this.isOnlineQuery = true;
             Query("top_rated", "Top Rated",true);
             return true;
 
         } else if (itemThatWasClickedId == R.id.favourite) {
             this.title = "Favourites";
             this.path = "favourites";
+            this.isOnlineQuery = false;
             Query("favourites", "Favourites",false);
-            getSupportLoaderManager().initLoader(LOADER_ID_DB, null, this);
             return true;
 
         }
@@ -121,15 +155,7 @@ public class MainActivity extends AppCompatActivity implements
         outState.putString("path", path);
         outState.putString("Title", title);
         outState.putBoolean("isOnlineQuery", isOnlineQuery);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-
-        super.onRestoreInstanceState(savedInstanceState);
-        path = savedInstanceState.getString("path");
-        title = savedInstanceState.getString("Title");
-        isOnlineQuery = savedInstanceState.getBoolean("isOnlineQuery");
+        outState.putString("jsonArray", String.valueOf(results));
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -204,9 +230,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<JSONArray> loader, final JSONArray results) {
+        this.results = results;
         if (results != null && results.length() != 0) {
             List<String> posterUrls = new ArrayList<>();
-            Log.d("RESULTS", "onLoadFinished: "+results);
             for (int i = 0; i < results.length(); i++) {
                 JSONObject result = results.optJSONObject(i);
                 String poster_path = result.optString("poster_path");
@@ -238,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoaderReset(Loader<JSONArray> loader) {
-
     }
 
     void Query(String path, String title, boolean isOnlineQuery) {
