@@ -14,5 +14,6 @@
     <string name="video">Video</string>
     <string name="ingredients">Ingredients</string>
     <string name="widget_toast">Ingredients Added to Widget</string>
+    <string name="thumb_text">Sorry No Video Found</string>
     <bool name="is_tablet">false</bool>
 </resources>

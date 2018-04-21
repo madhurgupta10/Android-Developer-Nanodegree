@@ -36,6 +36,7 @@ public class RecipeStepDetailFragment extends Fragment {
     String mediaUrl;
     int ORIENTATION;
     Recipe recipe;
+    long playerPosition = 0;
 
     public RecipeStepDetailFragment() {
     }
@@ -85,12 +86,43 @@ public class RecipeStepDetailFragment extends Fragment {
                 descriptionTextView.setText(step.getDescription());
             }
             simpleExoPlayerView = view.findViewById(R.id.exo_player);
-            mediaUrl = step.getVideoURL();
-            if (mediaUrl.length() == 0) {
-                mediaUrl = step.getThumbnailURL();
-            }
-            if (mediaUrl.length() != 0) {
-                initializePlayer(mediaUrl);
+            ImageView imageView = view.findViewById(R.id.thumb_iv);
+
+            if (savedInstanceState == null) {
+                mediaUrl = step.getVideoURL();
+                if (mediaUrl.length() == 0) {
+                    if (step.getThumbnailURL().length() != 0) {
+                        Picasso.with(this.getContext())
+                                .load(step.getThumbnailURL())
+                                .fit()
+                                .centerCrop()
+                                .into(imageView);
+                    } else {
+                        TextView textView = view.findViewById(R.id.thumb_tv);
+                        textView.setText(R.string.thumb_text);
+                    }
+                }
+                else  {
+                    initializePlayer(mediaUrl, 0, true);
+                }
+            } else {
+                mediaUrl = savedInstanceState.getString("mediaUrl");
+                playerPosition = savedInstanceState.getLong("seekTo");
+                boolean isPlayWhenReady = savedInstanceState.getBoolean("playState");
+                if (mediaUrl.length() == 0) {
+                    if (step.getThumbnailURL().length() != 0) {
+                        Picasso.with(this.getContext())
+                                .load(step.getThumbnailURL())
+                                .fit()
+                                .centerCrop()
+                                .into(imageView);
+                    } else {
+                        TextView textView = view.findViewById(R.id.thumb_tv);
+                        textView.setText(R.string.thumb_text);
+                    }
+                } else {
+                    initializePlayer(mediaUrl, playerPosition, isPlayWhenReady);
+                }
             }
         }
 
@@ -107,25 +139,36 @@ public class RecipeStepDetailFragment extends Fragment {
         return inflater.inflate(R.layout.recipestep_detail, container, false);
     }
 
-    private void initializePlayer(String mediaUrl) {
+    private void initializePlayer(String mediaUrl, long seekTo, boolean state) {
 
         TrackSelector trackSelector = new DefaultTrackSelector();
         exoPlayer = ExoPlayerFactory.newSimpleInstance(this.getContext(), trackSelector);
         simpleExoPlayerView.setPlayer(exoPlayer);
-
+        exoPlayer.seekTo(seekTo);
         String userAgent = Util.getUserAgent(this.getContext(), "BakingApp");
         MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(mediaUrl), new DefaultDataSourceFactory(
                 this.getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
         exoPlayer.prepare(mediaSource);
-        exoPlayer.setPlayWhenReady(true);
+        exoPlayer.setPlayWhenReady(state);
 
     }
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (exoPlayer != null) {
+            playerPosition = exoPlayer.getCurrentPosition();
+            boolean isPlayWhenReady = exoPlayer.getPlayWhenReady();
+            outState.putBoolean("playState", isPlayWhenReady);
+            outState.putLong("seekTo", playerPosition);
+        }
         outState.putString("mediaUrl", mediaUrl);
     }
-
-
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (exoPlayer != null) {
+            exoPlayer.release();
+        }
+    }
 }
