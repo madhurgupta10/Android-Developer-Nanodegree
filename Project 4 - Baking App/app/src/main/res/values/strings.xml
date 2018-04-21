@@ -3,11 +3,16 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="title_recipestep_list">""</string>
     <string name="title_recipestep_detail">""</string>
-    <bool name="is_tablet">false</bool>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Baking App</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="appwidget_text">Ingredients</string>
+    <string name="add_widget">Add widget</string>
+    <string name="video">Video</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="widget_toast">Ingredients Added to Widget</string>
+    <bool name="is_tablet">false</bool>
 </resources>

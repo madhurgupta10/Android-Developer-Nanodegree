@@ -2,8 +2,9 @@ package com.example.project4.bakingapp;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,34 +14,28 @@ import android.widget.TextView;
 
 import com.example.project4.bakingapp.model.Recipe;
 import com.example.project4.bakingapp.model.Step;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
 
-import static com.example.project4.bakingapp.RecipeStepListActivity.recipe;
-
 public class RecipeStepDetailFragment extends Fragment {
 
+    public static final String ARG_ITEM_ID = "item_id";
     private static Step step;
     SimpleExoPlayerView simpleExoPlayerView;
     SimpleExoPlayer exoPlayer;
+    TextView descriptionTextView;
+    String mediaUrl;
     int ORIENTATION;
+    Recipe recipe;
 
     public RecipeStepDetailFragment() {
     }
@@ -51,7 +46,7 @@ public class RecipeStepDetailFragment extends Fragment {
 
         ORIENTATION = this.getActivity().getResources().getConfiguration().orientation;
 
-        if (getArguments() != null) {
+        if (getArguments().containsKey(ARG_ITEM_ID)) {
             Bundle args = getArguments();
             step = (Step) args.getSerializable("stepBundle");
             recipe = (Recipe) args.getSerializable("recipeBundle");
@@ -80,17 +75,17 @@ public class RecipeStepDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipestep_detail, container, false);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if (step != null) {
-            final int ORIENTATION = this.getActivity().getResources().getConfiguration().orientation;
-            if (ORIENTATION == 1) {
-                ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(step.getDescription());
+            descriptionTextView = view.findViewById(R.id.recipestep_detail);
+            boolean is_tablet = getResources().getBoolean(R.bool.is_tablet);
+            if (ORIENTATION == 1 || is_tablet) {
+                descriptionTextView.setText(step.getDescription());
             }
-            simpleExoPlayerView = rootView.findViewById(R.id.exo_player);
-            String mediaUrl = step.getVideoURL();
+            simpleExoPlayerView = view.findViewById(R.id.exo_player);
+            mediaUrl = step.getVideoURL();
             if (mediaUrl.length() == 0) {
                 mediaUrl = step.getThumbnailURL();
             }
@@ -99,13 +94,18 @@ public class RecipeStepDetailFragment extends Fragment {
             }
         }
 
-        return rootView;
     }
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        mPlayerFragment.pause();
-//    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (container != null) {
+            container.removeAllViews();
+            container.clearDisappearingChildren();
+        }
+
+        return inflater.inflate(R.layout.recipestep_detail, container, false);
+    }
 
     private void initializePlayer(String mediaUrl) {
 
@@ -113,11 +113,19 @@ public class RecipeStepDetailFragment extends Fragment {
         exoPlayer = ExoPlayerFactory.newSimpleInstance(this.getContext(), trackSelector);
         simpleExoPlayerView.setPlayer(exoPlayer);
 
-        String userAgent = Util.getUserAgent(this.getContext(), "ClassicalMusicQuiz");
+        String userAgent = Util.getUserAgent(this.getContext(), "BakingApp");
         MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(mediaUrl), new DefaultDataSourceFactory(
                 this.getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
         exoPlayer.prepare(mediaSource);
         exoPlayer.setPlayWhenReady(true);
 
     }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("mediaUrl", mediaUrl);
+    }
+
+
 }

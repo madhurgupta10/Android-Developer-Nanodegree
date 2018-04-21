@@ -27,14 +27,16 @@ public class RecipeStepAdapter
     private final ArrayList<Step> steps;
     private final Recipe recipe;
     private final boolean twoPane;
+    private final ArrayList<Recipe> recipeArrayList;
 
     public RecipeStepAdapter(RecipeStepListActivity parentActivity,
-                             Recipe recipe, boolean twoPane) {
+                             Recipe recipe, boolean twoPane, ArrayList<Recipe> recipeArrayList) {
         
         this.recipe = recipe;
         this.steps = (ArrayList<Step>) recipe.getSteps();
         this.parentActivity = parentActivity;
         this.twoPane = twoPane;
+        this.recipeArrayList = recipeArrayList;
     }
 
     private final View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -46,7 +48,8 @@ public class RecipeStepAdapter
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("stepBundle", step);
                 bundle.putSerializable("recipeBundle", recipe);
-
+                bundle.putSerializable("RecipeArrayListBundle", recipeArrayList);
+                bundle.putString(RecipeStepDetailFragment.ARG_ITEM_ID, String.valueOf(step.getId()));
                 RecipeStepDetailFragment recipeStepDetailFragment = new RecipeStepDetailFragment();
                 recipeStepDetailFragment.setArguments(bundle);
                 parentActivity.getSupportFragmentManager().beginTransaction()
@@ -58,6 +61,7 @@ public class RecipeStepAdapter
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("stepBundle", step);
                 bundle.putSerializable("recipeBundle", recipe);
+                bundle.putSerializable("RecipeArrayListBundle", recipeArrayList);
                 intent.putExtra("bundle", bundle);
                 context.startActivity(intent);
             }

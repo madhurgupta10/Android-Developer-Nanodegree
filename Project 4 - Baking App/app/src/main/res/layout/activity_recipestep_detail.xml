@@ -29,7 +29,8 @@
                 android:src="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/img_toolbar"/>
+                android:id="@+id/img_toolbar"
+                android:contentDescription="@string/video" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"

@@ -19,10 +19,8 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
     private ArrayList<Ingredient> ingredients;
     private Recipe recipe;
     private Context context;
-    private ImageView imageView;
 
-    public RecipeIngredientAdapter(Recipe recipe, Context context, ImageView imageView) {
-        this.imageView = imageView;
+    public RecipeIngredientAdapter(Recipe recipe, Context context) {
         this.context = context;
         this.recipe = recipe;
         this.ingredients = (ArrayList<Ingredient>) recipe.getIngredients();
