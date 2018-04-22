@@ -96,21 +96,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                                 public void onCompleted(Exception e, String jsonData) {
                                     try {
                                         Log.d("JSON", "onCompleted: " + jsonData);
-                                        JSONObject json = new JSONObject(jsonData);
-                                        if (json.optString("status").equals("success")) {
-                                            JSONArray data = json.optJSONObject("data")
-                                                    .optJSONObject("result")
-                                                    .optJSONArray("items");
-                                            JSONObject item = (JSONObject) data.opt(0);
-                                            String imgUrl = item.optString("thumbnail");
-                                            imgUrl = imgUrl.replaceFirst("//", "https://");
-                                            recipeArrayList.get(position).setImage(imgUrl);
-                                            Picasso.with(context)
-                                                    .load(imgUrl)
-                                                    .fit()
-                                                    .centerCrop()
-                                                    .into(imageView);
-                                            textViewRecipeName.setTextColor(Color.parseColor("#FFFFFF"));
+                                        if (jsonData != null && jsonData.length() != 0) {
+                                            JSONObject json = new JSONObject(jsonData);
+                                            if (json.optString("status").equals("success")) {
+                                                JSONArray data = json.optJSONObject("data")
+                                                        .optJSONObject("result")
+                                                        .optJSONArray("items");
+                                                JSONObject item = (JSONObject) data.opt(0);
+                                                String imgUrl = item.optString("thumbnail");
+                                                imgUrl = imgUrl.replaceFirst("//", "https://");
+                                                recipeArrayList.get(position).setImage(imgUrl);
+                                                Picasso.with(context)
+                                                        .load(imgUrl)
+                                                        .fit()
+                                                        .centerCrop()
+                                                        .into(imageView);
+                                                textViewRecipeName.setTextColor(Color.parseColor("#FFFFFF"));
+                                            } else {
+                                                textViewRecipeName.setTextColor(Color.parseColor("#000000"));
+                                            }
                                         } else {
                                             textViewRecipeName.setTextColor(Color.parseColor("#000000"));
                                         }
