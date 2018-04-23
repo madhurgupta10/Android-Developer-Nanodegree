@@ -1,16 +1,13 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.example.project4.androidlibrary.JokesActivity;
-import com.example.project4.jokeslibrary.JokesClass;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,16 +50,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        JokesClass jokesClass = new JokesClass();
-        String joke = jokesClass.tellLameJoke();
 
-        if (joke.length() != 0) {
-            Toast.makeText(this, "Joke Found", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, JokesActivity.class);
-            intent.putExtra("Joke", joke);
-            startActivity(intent);
-        }
+        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
     }
-
-
 }
+

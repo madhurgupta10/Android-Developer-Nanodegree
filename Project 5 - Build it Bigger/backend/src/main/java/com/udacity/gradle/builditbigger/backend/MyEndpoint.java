@@ -25,7 +25,7 @@ public class MyEndpoint {
         MyBean response = new MyBean();
         JokesClass jokesClass = new JokesClass();
         String joke = jokesClass.tellLameJoke();
-        response.setData(joke);
+        response.setData(joke+"");
 
         return response;
     }
