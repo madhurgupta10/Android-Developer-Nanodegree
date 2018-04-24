@@ -18,6 +18,7 @@ import java.io.IOException;
 public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     public static MyApi myApiService = null;
     private Context context;
+    String error = "Error";
 
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
@@ -46,7 +47,8 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
         try {
             return myApiService.sayHi(name).execute().getData();
         } catch (IOException e) {
-            return e.getMessage();
+            error = e.getMessage();
+            return "";
         }
     }
 
@@ -57,6 +59,8 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
             Intent intent = new Intent(context, JokesActivity.class);
             intent.putExtra("Joke", result);
             context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "Joke Not Found Error - "+error, Toast.LENGTH_LONG).show();
         }
     }
 }
