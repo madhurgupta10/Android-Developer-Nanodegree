@@ -4,18 +4,25 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -39,6 +46,11 @@ public class ArticleDetailActivity extends AppCompatActivity
     private View mUpButtonContainer;
     private View mUpButton;
 
+    private TextView mTitleTextView;
+
+    private Toolbar mToolbar;
+    private Drawable mBackground;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +63,11 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         getLoaderManager().initLoader(0, null, this);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mBackground = mToolbar.getBackground();
+
+        mTitleTextView = (TextView) findViewById(R.id.title_tv);
+
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
@@ -58,19 +75,21 @@ public class ArticleDetailActivity extends AppCompatActivity
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
                 mUpButton.animate()
                         .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
                         .setDuration(300);
+
             }
 
             @Override
             public void onPageSelected(int position) {
                 if (mCursor != null) {
-                    mCursor.moveToPosition(position);
+                        mCursor.moveToPosition(position);
+                        mTitleTextView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
                 updateUpButtonPosition();
@@ -89,11 +108,13 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mUpButtonContainer.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
                 @Override
                 public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
                     view.onApplyWindowInsets(windowInsets);
                     mTopInset = windowInsets.getSystemWindowInsetTop();
                     mUpButtonContainer.setTranslationY(mTopInset);
+//                    mToolbar.setTitle("BLA");
                     updateUpButtonPosition();
                     return windowInsets;
                 }
@@ -149,7 +170,18 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private void updateUpButtonPosition() {
         int upButtonNormalBottom = mTopInset + mUpButton.getHeight();
-        mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
+//        mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
+//        Log.d("UP BUTTON", "updateUpButtonPosition: "+mCursor.getString(ArticleLoader.Query.TITLE));
+        mTitleTextView.setTranslationY(Math.min(upButtonNormalBottom - mSelectedItemUpButtonFloor, 0));
+        if (upButtonNormalBottom - mSelectedItemUpButtonFloor >= 0) {
+            mUpButtonContainer.setBackground(new ColorDrawable((Color.BLACK)));
+//            mUpButtonContainer.setVisibility(View.VISIBLE);
+            mUpButtonContainer.setElevation(4);
+        } else {
+            mToolbar.setBackground(mBackground);
+            mUpButtonContainer.setBackground(mBackground);
+            mUpButtonContainer.setElevation(0);
+        }
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
