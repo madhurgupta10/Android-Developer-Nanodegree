@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draw_insets_frame_layout"
     android:layout_width="match_parent"
+    style="@style/Theme.Bacon"
     android:layout_height="match_parent">
 
         <com.example.xyzreader.ui.ObservableScrollView
@@ -36,14 +37,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:maxWidth="@dimen/detail_card_max_width"
-                    android:background="#fff"
+                    android:background="@color/white"
                     android:elevation="2dp">
 
                     <LinearLayout
                         android:id="@+id/meta_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#333"
+                        android:background="@color/protect"
                         android:layout_gravity="bottom"
                         android:orientation="vertical"
                         android:paddingLeft="@dimen/detail_inner_horiz_margin"
@@ -92,7 +93,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
         android:stateListAnimator="@anim/fab_state_list_anim"
-        app:backgroundTint="@color/darkgrey"
+        app:backgroundTint="@color/colorPrimary"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"

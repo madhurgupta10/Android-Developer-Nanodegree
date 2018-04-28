@@ -18,7 +18,12 @@
 <resources>
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <item name="colorPrimary">@color/darkgrey</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/ltgray</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="Theme.Bacon.Detail">
@@ -30,7 +35,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/ltgray</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
