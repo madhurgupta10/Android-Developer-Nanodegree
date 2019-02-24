@@ -10,6 +10,7 @@ Building a layout and populating its fields from data received as JSON is a comm
 #### Screenshots
 <img src="https://i.imgur.com/Dnnvd4B.png" width="30%"> <img src="https://i.imgur.com/xdM0UZq.png" width="30%"> <img src="https://i.imgur.com/2kll0Gx.png" width="30%"> 
 
+
 * **Project 2 - Popular Movies Stage 1**
 
 Built a simple movies app that communicates with the Internet and provides a responsive user experience. In this project, I Fetched data from the Internet using the Movie Database API. Used adapters and custom list layouts to populate recycler view. Incorporated libraries to simplify the amount of code needed to write.
