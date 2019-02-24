@@ -44,7 +44,7 @@ public class QueryTask extends AsyncTask<Void, Void, String> implements MyAdapte
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://api.themoviedb.org/3/movie/"+p+"?api_key="+key)
+                .url("https://api.themoviedb.org/3/movie/"+p+"?api_key="+key)
                 .build();
 
         String data = null;
