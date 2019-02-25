@@ -10,10 +10,17 @@ Building a layout and populating its fields from data received as JSON is a comm
 #### Screenshots
 <img src="https://i.imgur.com/Dnnvd4B.png" width="30%"> <img src="https://i.imgur.com/xdM0UZq.png" width="30%"> <img src="https://i.imgur.com/2kll0Gx.png" width="30%"> 
 
-
 * **Project 2 - Popular Movies Stage 1**
 
 Built a simple movies app that communicates with the Internet and provides a responsive user experience. In this project, I Fetched data from the Internet using the Movie Database API. Used adapters and custom list layouts to populate recycler view. Incorporated libraries to simplify the amount of code needed to write.
 
 #### Screenshots
 <img src="https://i.imgur.com/TIPvgbD.jpg" width="30%"> <img src="https://i.imgur.com/amG2snE.jpg" width="30%"> <img src="https://i.imgur.com/O83AXoR.jpg" width="30%"> 
+
+* **Project 3 - Popular Movies Stage 2**
+
+Upgraded the App UI, added option to save movies as favourites and view the details when offline using SQLite DB. Also made the app more efficent by using AsyncTask Loaders and maintaing app state using Activity Lifecycle.
+
+#### Screenshots
+<img src="https://i.imgur.com/W59KH1A.jpg" width="30%"> <img src="https://i.imgur.com/71eAM82.jpg" width="30%"> <img src="https://i.imgur.com/6GBmFU0.jpg" width="30%"> 
+<img src="https://i.imgur.com/hwSlbdY.png" width="30%"> <img src="https://i.imgur.com/eZJ8CzP.png" width="30%"> <img src="https://i.imgur.com/X6Eq223.jpg" width="30%">
