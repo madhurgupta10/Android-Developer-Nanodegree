@@ -161,7 +161,7 @@ public class DetailActivity extends AppCompatActivity {
     private void queryTrailerAndReviews(String movieId) {
         if (isNetworkConnected(this)) {
             Ion.with(this)
-                    .load("http://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=" + key)
+                    .load("https://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=" + key)
                     .asString()
                     .setCallback(new FutureCallback<String>() {
                         @Override
@@ -171,7 +171,7 @@ public class DetailActivity extends AppCompatActivity {
                         }
                     });
             Ion.with(this)
-                    .load("http://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=" + key)
+                    .load("https://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=" + key)
                     .asString()
                     .setCallback(new FutureCallback<String>() {
                         @Override
