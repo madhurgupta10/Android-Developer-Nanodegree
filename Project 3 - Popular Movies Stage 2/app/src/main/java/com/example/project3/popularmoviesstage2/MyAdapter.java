@@ -68,7 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public void bind(int position) {
             if (urls != null) {
                 Picasso.with(context)
-                        .load("http://image.tmdb.org/t/p/w185/"+urls.get(position))
+                        .load("https://image.tmdb.org/t/p/w185/"+urls.get(position))
                         .into(imageView);
                 progressBar.setVisibility(View.INVISIBLE);
             } else {
