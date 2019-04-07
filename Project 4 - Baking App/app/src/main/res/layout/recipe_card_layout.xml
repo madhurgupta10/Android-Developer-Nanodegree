@@ -18,16 +18,15 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:alpha="0.8"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:foreground="@drawable/gradient_black"
             android:id="@+id/cv_img" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:gravity="center_horizontal"
+            android:padding="2dp"
             android:id="@+id/recipe_card_layout"
             android:orientation="horizontal">
 
@@ -35,10 +34,11 @@
                 android:id="@+id/content"
                 android:textSize="40sp"
                 android:textColor="@color/black"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin" />
+                android:layout_gravity="bottom"
+                android:gravity="center_horizontal"
+                android:layout_margin="5dp" />
 
         </LinearLayout>
 

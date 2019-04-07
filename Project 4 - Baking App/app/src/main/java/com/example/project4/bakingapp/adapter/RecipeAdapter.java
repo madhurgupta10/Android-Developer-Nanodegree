@@ -88,8 +88,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                     String imgQuery = recipeArrayList.get(position).getName();
                     imgQuery = imgQuery.replaceAll("\\s+", "%20");
                     Ion.with(context)
-                            .load("https://api.qwant.com/api/search/images?count=1&q=" +
-                                    imgQuery)
+                            .load("https://gist.githubusercontent.com/madhurgupta10/fe41d478c3e93187304a64c17b6d405e/raw/c086484d27ea10c8fb59245b45e42713f5a286f5/baking_app_pic_api.json")
                             .asString()
                             .setCallback(new FutureCallback<String>() {
                                 @Override
@@ -102,9 +101,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                                                 JSONArray data = json.optJSONObject("data")
                                                         .optJSONObject("result")
                                                         .optJSONArray("items");
-                                                JSONObject item = (JSONObject) data.opt(0);
+                                                JSONObject item = (JSONObject) data.opt(position);
                                                 String imgUrl = item.optString("thumbnail");
-                                                imgUrl = imgUrl.replaceFirst("//", "https://");
                                                 recipeArrayList.get(position).setImage(imgUrl);
                                                 Picasso.with(context)
                                                         .load(imgUrl)
