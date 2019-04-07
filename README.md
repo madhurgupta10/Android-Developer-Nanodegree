@@ -32,3 +32,8 @@ Implemented a Baking app from scratch which adapts to the screen size using frag
 > <img src="https://i.imgur.com/j7fYcqZ.jpg" width="30%"> <img src="https://i.imgur.com/IFpQZYU.png" width="30%"> <img src="https://i.imgur.com/ctaFeqe.png" width="30%">
 <img src="https://i.imgur.com/h37ynVF.jpg" width="45%"> <img src="https://i.imgur.com/xm7A527.jpg" width="45%">
 <img src="https://i.imgur.com/lLxQFAD.png" width="45%"> <img src="https://i.imgur.com/dM61uI2.png" width="45%">
+<img src="https://i.imgur.com/z6lEomF.jpg" width="90%">
+<img src="https://i.imgur.com/sIRjHvU.png" width="90%">
+<img src="https://i.imgur.com/7sqtYgS.png" width="90%">
+<img src="https://i.imgur.com/RInfNF7.png" width="90%">
+<img src="https://i.imgur.com/PsWikIR.png" width="90%">
