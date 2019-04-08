@@ -30,10 +30,10 @@ Upgraded the App UI, added option to save movies as favourites and view the deta
 Implemented a Baking app from scratch which adapts to the screen size using fragments. Integrated ExoPlayer, App Widget functionalities, and much more.
 > <img src="https://i.imgur.com/Ps4XW6W.jpg" width="30%"> <img src="https://i.imgur.com/DiYdZPA.jpg" width="30%"> <img src="https://i.imgur.com/yzg78bJ.png" width="30%"> 
 > <img src="https://i.imgur.com/j7fYcqZ.jpg" width="30%"> <img src="https://i.imgur.com/IFpQZYU.png" width="30%"> <img src="https://i.imgur.com/ctaFeqe.png" width="30%">
-<img src="https://i.imgur.com/h37ynVF.jpg" width="45%"> <img src="https://i.imgur.com/xm7A527.jpg" width="45%">
-<img src="https://i.imgur.com/lLxQFAD.png" width="45%"> <img src="https://i.imgur.com/dM61uI2.png" width="45%">
-<img src="https://i.imgur.com/z6lEomF.jpg" width="90%">
-<img src="https://i.imgur.com/sIRjHvU.png" width="90%">
-<img src="https://i.imgur.com/7sqtYgS.png" width="90%">
-<img src="https://i.imgur.com/RInfNF7.png" width="90%">
-<img src="https://i.imgur.com/PsWikIR.png" width="90%">
+> <img src="https://i.imgur.com/h37ynVF.jpg" width="45%"> <img src="https://i.imgur.com/xm7A527.jpg" width="45%">
+> <img src="https://i.imgur.com/lLxQFAD.png" width="45%"> <img src="https://i.imgur.com/dM61uI2.png" width="45%">
+> <img src="https://i.imgur.com/z6lEomF.jpg" width="90%">
+> <img src="https://i.imgur.com/sIRjHvU.png" width="90%">
+> <img src="https://i.imgur.com/7sqtYgS.png" width="90%">
+> <img src="https://i.imgur.com/RInfNF7.png" width="90%">
+> <img src="https://i.imgur.com/PsWikIR.png" width="90%">
