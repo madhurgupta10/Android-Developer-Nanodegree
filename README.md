@@ -37,3 +37,10 @@ Implemented a Baking app from scratch which adapts to the screen size using frag
 > <img src="https://i.imgur.com/7sqtYgS.png" width="90%">
 > <img src="https://i.imgur.com/RInfNF7.png" width="90%">
 > <img src="https://i.imgur.com/PsWikIR.png" width="90%">
+
+* **Project 6 - XYZ Reader**
+
+This news reading app was designed with the Material Design Components, eye pleasing fonts and follows smooth animations along with parallax effects.
+
+#### Screenshots
+> <img src="https://i.imgur.com/0DmWuHG.jpg" width="30%"> <img src="https://i.imgur.com/Q8H1o9X.png" width="30%"> <img src="https://i.imgur.com/ZKAqteU.png" width="30%">
