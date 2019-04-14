@@ -1,4 +1,41 @@
 <resources>
     <string name="app_name">Food Vood App</string>
     <string name="action_settings">Settings</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="plus_one">1</string>
+    <string name="logo">Logo</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="cart">Checkout</string>
+    <string name="total_quantity">Total Quantity:</string>
+    <string name="_0">0</string>
+    <string name="total_amount">Amount:</string>
+    <string name="rs">Rs</string>
+    <string name="currency">Rs%d</string>
+    <string name="order">Order</string>
+    <string name="no_order_found">No Order Found</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="url_base">https://food-vood.herokuapp.com/?lt=</string>
+    <string name="url_extra"><![CDATA[&lg=]]></string>
+    <string name="query_url">queryUrl</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="data">data</string>
+    <string name="restbundle">RestaurantsBundle</string>
+    <string name="bundle">bundle</string>
+    <string name="index">index</string>
+    <string name="restauransBundle">RestaurantsBundle</string>
+    <string name="restaurants">restaurants</string>
+    <string name="amount">amount</string>
+    <string name="name">name</string>
+    <string name="item">item</string>
+    <string name="quantity">quantity</string>
+    <string name="text">text</string>
+    <string name="restaurant_image">restaurant_image</string>
+    <string name="up_image_vie">up image vie</string>
+    <string name="next_image_view">next Image view</string>
+    <string name="gps">Location Not Found</string>
+    <string name="recent_order">Recent Order</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner">BANNER</string>
 </resources>

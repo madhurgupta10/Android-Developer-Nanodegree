@@ -1,0 +1,54 @@
+[
+    {
+        "restaurant_name" : "Milkshake and Co.",
+        "rating" : "4.9",
+        "budget" : "Rs 200",
+        "image": "https://b.zmtcdn.com/data/pictures/chains/7/123067/62e39d89e78aec3a12a863e93d8dcae1.jpg?resize=1204%3A502&crop=1200%3A464%3B0%2C0",
+        "menu" : [
+            {
+                "item_name" : "The Godfather Milkshake",
+                "short_description" : "Coffee and chocolate",
+                "amount" : "Rs 180.95",
+                "image": "https://upload.wikimedia.org/wikipedia/hi/thumb/b/b2/Veg_symbol.svg/1024px-Veg_symbol.svg.png"
+            },
+            {
+                "item_name": "Black Eye Milkshake",
+                "short_description": "Oreo cookies and chocolate",
+                "amount": "Rs 180.95",
+                "image": "https://upload.wikimedia.org/wikipedia/hi/thumb/b/b2/Veg_symbol.svg/1024px-Veg_symbol.svg.png"
+            },
+            {
+                "item_name": "Breadcrumb Milkshake",
+                "short_description": "Nutella and chocolate",
+                "amount": "Rs 180.95",
+                "image": "https://upload.wikimedia.org/wikipedia/hi/thumb/b/b2/Veg_symbol.svg/1024px-Veg_symbol.svg.png"
+            }
+        ]
+    },
+    {
+        "restaurant_name": "Le Gaufres",
+        "rating": "4.5",
+        "budget": "Rs 200",
+        "image": "https://b.zmtcdn.com/data/res_imagery/123201_RESTAURANT_65284ed42b615a4089429d73ce60af34.jpg?fit=around%7C1200%3A464&crop=1200%3A464%3B0%2C0",
+        "menu": [
+            {
+                "item_name": "Paneer Tikka Sandwich",
+                "short_description": "Panner",
+                "amount": "Rs 200.00",
+                "image": "https://upload.wikimedia.org/wikipedia/hi/thumb/b/b2/Veg_symbol.svg/1024px-Veg_symbol.svg.png"
+            },
+            {
+                "item_name": "Richie Rich Sweet Waffle",
+                "short_description": "Nutella and chocolat",
+                "amount": "Rs 215.00",
+                "image": "https://upload.wikimedia.org/wikipedia/hi/thumb/b/b2/Veg_symbol.svg/1024px-Veg_symbol.svg.png"
+            },
+            {
+                "item_name": "Ferrero Affair Sweet Waffle",
+                "short_description": "Nutella",
+                "amount": "Rs 180.00",
+                "image": "https://upload.wikimedia.org/wikipedia/hi/thumb/b/b2/Veg_symbol.svg/1024px-Veg_symbol.svg.png"
+            }
+        ]
+    }
+]
